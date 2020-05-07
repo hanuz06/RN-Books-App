@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-// import { Provider } from 'react-redux';
-import { AppLoading } from 'expo';
-import * as Font from 'expo-font';
-// import ReduxThunk from 'redux-thunk';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import { AppLoading } from "expo";
+import * as Font from "expo-font";
+import ReduxThunk from "redux-thunk";
+
+import authReducer from "./store/reducers/authReducer";
+import bookReducer from "./store/reducers/booksReducer";
+import AppNavigator from "./navigation/AppNavigator";
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+  books: bookReducer,
+});
+
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFonts = () => {
   return Font.loadAsync({
-    'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'),
-    'roboto-bold': require('./assets/fonts/Roboto-Bold.ttf')
+    "roboto-regular": require("./assets/fonts/Roboto-Regular.ttf"),
+    "roboto-bold": require("./assets/fonts/Roboto-Bold.ttf"),
   });
 };
 
-export default function App():JSX.Element {
-
+export default function App(): JSX.Element {
   const [fontLoaded, setFontLoaded] = useState<boolean>(false);
 
   if (!fontLoaded) {
@@ -27,19 +36,11 @@ export default function App():JSX.Element {
       />
     );
   }
-  
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!!</Text>
-    </View>
+    <Provider store={store}>
+      <AppNavigator/>
+    </Provider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
