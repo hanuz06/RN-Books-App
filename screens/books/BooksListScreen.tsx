@@ -1,45 +1,124 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import { BOOKS, Ibook } from "../../data/book-data.ts";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  ActivityIndicator,
+  ListRenderItemInfo,
+} from "react-native";
+import { useSelector, useDispatch, DefaultRootState } from "react-redux";
+import * as booksActions from "../../store/actions/booksActions";
+
+import { BOOKS, Ibook } from "../../data/book-data";
+import { IBook, IBookState } from "../../types";
 import BookItem from "../../components/BookItem";
 import { Icon, Button } from "react-native-elements";
 
-const BooksListScreen = (props: any): JSX.Element => {
+import Colors from "../../constants/Colors";
+
+const BooksListScreen: React.FC = (props: any): JSX.Element => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>();
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const books = useSelector<IBookState, IBook[]>((state:any)=> state.books.allBooks);
+
+  // console.log("BBBBBBBBBBBBBBBBBBBBBBBBB ", books);
+  const dispatch = useDispatch();
+
+  const loadBooks = useCallback(async () => {
+    setError(null);
+    setIsRefreshing(true);
+    try {
+      await dispatch(booksActions.fetchBooks());
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsRefreshing(false);
+  }, [dispatch, setIsLoading, setError]);
+
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener("focus", loadBooks);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [loadBooks]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    loadBooks().then(() => {
+      setIsLoading(false);
+    });
+  }, [dispatch, loadBooks]);
+
   const bookSelectHandler = (id: string): void => {
     console.log("book selected");
-    // props.navigation.navigate("BookDetails", {
-    //   id: id,
-    // });
+    props.navigation.navigate("BookDetails", {
+      id: id,
+    });
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
+  if (!isLoading && books.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No books found. You can add some!</Text>
+      </View>
+    );
+  }
+
+  // interface IFlatList {
+  //   data: IBook[]
+  // }
 
   return (
     <FlatList
-      data={BOOKS}
+      onRefresh={loadBooks}
+      refreshing={isRefreshing}
+      data={books}
       numColumns={2}
-      keyExtractor={(item: Ibook): string => item.id}
-      renderItem={(itemData) => (
+      keyExtractor={(item:IBook): string => item.id}
+      renderItem={(itemData: ListRenderItemInfo<IBook>) => (
         <BookItem
           id={itemData.item.id}
           title={itemData.item.title}
           image={itemData.item.thumbnailUrl}
-          shortDescription={itemData.item.shortDescription}
+          description={itemData.item.description}
           authors={itemData.item.authors}
           onSelect={bookSelectHandler}
         >
           <Button
-            icon={<Icon name="details" size={15} color="blue" />}
+            icon={<Icon name="details" size={15} color="#fff" />}
             title="Details"
-            type="outline"
+            type="solid"
             loading={false}
             raised={true}
-            onPress={()=>console.log('Press button')}
-          />         
+            onPress={() => console.log("Press button")}
+            buttonStyle={{ backgroundColor: Colors.primary }}
+          />
         </BookItem>
       )}
     />
   );
 };
 
+export const screenOptions = (navData) => {
+  return {
+    headerTitle: "All books",
+  };
+};
+
 export default BooksListScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+});

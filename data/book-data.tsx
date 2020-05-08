@@ -7,8 +7,9 @@ export interface Ibook {
     $date: string;
   };
   thumbnailUrl: string;
-  shortDescription: string;
-  longDescription: string;
+  shortDescription?: string;
+  longDescription?: string;
+  description?: string;
   status: string;
   authors: Array<string>;
   categories: Array<string>;
@@ -25,9 +26,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/ableson.jpg",
-    shortDescription:
-      "Unlocking Android: A Developer's Guide provides concise, hands-on instruction for the Android operating system and development tools.",
-    longDescription:
+    description:
       "Android is an open source mobile phone platform based on the Linux operating system and developed by the Open Handset Alliance, a consortium of over 30 hardware, software and telecom companies that focus on open standards for mobile devices.",
     status: "PUBLISH",
     authors: ["W. Frank Ableson", "Charlie Collins", "Robi Sen"],
@@ -43,9 +42,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/ableson2.jpg",
-    shortDescription:
-      'Android in Action, Second Edition is a comprehensive tutorial for Android developers.',
-    longDescription:
+    description:
       "When it comes to mobile apps, Android can do almost anything   and with this book, so can you! Android runs on mobile devices ranging from smart phones to tablets to countless special-purpose gadgets.",
     status: "PUBLISH",
     authors: ["W. Frank Ableson", "Robi Sen"],
@@ -61,9 +58,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/adzic.jpg",
-    shortDescription:
-      'Taking you far beyond "Hello Android," this fast-paced book puts you in the driver\'s seat as you learn important architectural concepts and implementation strategies. ',
-    longDescription:
+    description:
       "When it comes to mobile apps, Android can do almost anything   and with this book, so can you! Android runs on mobile devices ranging from smart phones to tablets to countless special-purpose gadgets.",
     status: "PUBLISH",
     authors: ["Gojko Adzic"],
@@ -79,10 +74,8 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/ahmed.jpg",
-    shortDescription:
+    description:
       "New web applications require engaging user-friendly interfaces and the cooler, the better. With Flex 3, web developers at any skill level can create high-quality, effective, and interactive Rich Internet Applications (RIAs) quickly and easily.",
-    longDescription:
-      "Flex removes the complexity barrier from RIA development by offering sophisticated tools and a straightforward programming language so you can focus on what you want to do instead of how to do it.",
     status: "PUBLISH",
     authors: ["Tariq Ahmed with Jon Hirschi", "Faisal Abid"],
     categories: ["Internet"],
@@ -97,10 +90,8 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/ibsen.jpg",
-    shortDescription:
+    description:
       "Camel in Action is for developers working with integration of any kind. This highly practical book introduces Camel and shows examples of how to use it with the 45+ supported enterprise integration patterns.",
-    longDescription:
-      "Apache Camel is a Java-based toolkit that makes it easy to implement services based on standard enterprise integration patterns (EIP). Through a concise, but sophisticated domain specific language (DSL), you can build integration logic in lego style. ",
     status: "PUBLISH",
     authors: ["Claus Ibsen", "Jonathan Anstey"],
     categories: ["Java"],
@@ -115,9 +106,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/ingersoll.jpg",
-    shortDescription:
-      "Taming Text is a hands-on, example-driven guide to working with unstructured text in the context of real-world applications.",
-    longDescription:
+    description:
       "It is no secret that the world is drowning in text and data. This causes real problems for everyday users who need to make sense of all the information available, and software engineers who want to make their text-based applications more useful and user-friendly.",
     status: "PUBLISH",
     authors: ["Grant S. Ingersoll", "Thomas S. Morton", "", "Andrew L. Farris"],
@@ -133,9 +122,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/jamae.jpg",
-    shortDescription:
-      "JBoss in Action teaches readers how to use the JBoss application server, digging into the things that separate JBoss from other Java EE servers.",
-    longDescription:
+    description:
       "The JBoss 5 Application Server is a Java Enterprise Edition 5 application server that provides services that most enterprise applications need, such as security, transactionality, persistence, monitoring, resource management, and remote access.",
     status: "PUBLISH",
     authors: ["Javid Jamae", "Peter Johnson"],
@@ -151,9 +138,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/janert.jpg",
-    shortDescription:
-      "Statistical data is only as valuable as your ability to analyze, interpret, and present it in a meaningful way. ",
-    longDescription:
+    description:
       "Gnuplot is the most widely used program to plot and visualize data for Unix/Linux systems and it is also popular for Windows and the Mac.",
     status: "PUBLISH",
     authors: ["Philipp K. Janert"],
@@ -169,9 +154,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/jenness.jpg",
-    shortDescription:
-      "Statistical data is only as valuable as your ability to analyze, interpret, and present it in a meaningful way. ",
-    longDescription:
+    description:
       "Extending and Embedding Perl explains how to expand the functionality and usefulness of the Perl programming language and how to use Perl from C programs.",
     status: "PUBLISH",
     authors: ["Tim Jenness", "Simon Cozens"],
@@ -187,9 +170,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/jharrington.jpg",
-    shortDescription:
-      "iOS 4 in Action, written for Xcode 4, is a detailed, hands-on guide that goes from setting up your development environment.",
-    longDescription:
+    description:
       "Written for Xcode 4, iOS 4 in Action guides you from setting up your development environment, through coding your first app, all the way to selling in the App Store.",
     status: "PUBLISH",
     authors: [
@@ -211,9 +192,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/johnson.jpg",
-    shortDescription:
-      "Statistical data is only as valuable as your ability to analyze, interpret, and present it in a meaningful way. ",
-    longDescription:
+    description:
       'As the complexity of web sites grows, more and more webmasters need to acquire programming skills. Naturally, such persons are inclined to learn Perl, the "language of the web.',
     status: "PUBLISH",
     authors: ["Andrew L. Johnson"],
@@ -229,9 +208,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/jones.jpg",
-    shortDescription:
-      "Learn Windows PowerShell in a Month of Lunches is an innovative tutorial designed for busy administrators. ",
-    longDescription:
+    description:
       "In Windows, there's a control panel, dialog box, administrative console, API, or wizard to manage every component of your system. There are thousands of them so many that it can be nearly impossible to keep track of all the locations and settings you need to administer Windows effectively.",
     status: "PUBLISH",
     authors: ["Don Jones"],
@@ -247,9 +224,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/kabacoff.jpg",
-    shortDescription:
-      "R in Action is the first book to present both the R system and the use cases that make it such a compelling package for business developers.",
-    longDescription:
+    description:
       "The ability to interpret and act on the massive amounts of information locked in web and enterprise systems is critical to success in the modern business economy.",
     status: "PUBLISH",
     authors: ["Robert I. Kabacoff"],
@@ -265,10 +240,8 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/ableson.jpg",
-    shortDescription:
+    description:
       "R in Action is the first book to present both the R system and the use cases that make it such a compelling package for business developers.",
-    longDescription:
-      "The ability to interpret and act on the massive amounts of information locked in web and enterprise systems is critical to success in the modern business economy.",
     status: "MEAP",
     authors: ["Matthias Kaeppler", "Michael D. Galpin", "Charlie Collins"],
     categories: ["Mobile Technology"],
@@ -284,9 +257,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/rosenberg.jpg",
-    shortDescription:
-      "R in Action is the first book to present both the R system and the use cases that make it such a compelling package for business developers.",
-    longDescription:
+    description:
       "R, a free software environment for statistical computing and graphics, is a comprehensive, fully-programmable package that empowers developers and analysts to capture, process, and respond intelligently to statistical information.",
     status: "PUBLISH",
     authors: ["Jothy Rosenberg", "Arthur Mateos"],
@@ -302,9 +273,7 @@ export const BOOKS: Ibook[] = [
     },
     thumbnailUrl:
       "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/rosing.jpg",
-    shortDescription:
-      '"The book provides all the theory and working programs needed to create real applications based on the latest IEEE P1363 standard."  --Reviewed in Cryptologia',
-    longDescription:
+    description:
       "Implementing Elliptic Curve Cryptography proceeds step-by-step to explain basic number theory, polynomial mathematics, normal basis mathematics and elliptic curve mathematics. With these in place, applications to cryptography are introduced.",
     status: "PUBLISH",
     authors: ["Michael Rosing"],

@@ -11,7 +11,7 @@ import {
 // import Card from "./Card";
 import { Card, ListItem, Button, Icon } from "react-native-elements";
 
-const BookItem = (props: any) => {
+const BookItem: React.FC = (props: any) => {
   let TouchableCmp: any = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -24,6 +24,7 @@ const BookItem = (props: any) => {
         flex: 1,
         maxHeight: 400,
         width: "100%",
+        maxWidth: 225,
         marginHorizontal: 5,
         marginVertical: 5,
         borderRadius: 10,
@@ -38,16 +39,14 @@ const BookItem = (props: any) => {
               <Image style={styles.image} source={{ uri: props.image }} />
             </View>
             <View style={styles.details}>
-              <Text numberOfLines={3} style={styles.text}>                
-                {props.shortDescription}
+              <Text numberOfLines={3} style={styles.text}>
+                {props.description}
               </Text>
-              <Text numberOfLines={2} style={styles.text}>               
-                Authors: {props.authors}
+              <Text numberOfLines={2} style={styles.text}>
+                <Text style={styles.author}>Authors:</Text> {props.authors}
               </Text>
             </View>
-            <View style={styles.actions}>
-              {props.children}
-            </View>
+            <View style={styles.actions}>{props.children}</View>
           </View>
         </TouchableCmp>
       </View>
@@ -68,7 +67,7 @@ const styles = StyleSheet.create({
   touchable: { overflow: "hidden", borderRadius: 10, width: "100%" },
   imageContainer: {
     width: "100%",
-    height: "55%",
+    height: "60%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     overflow: "hidden",
@@ -78,28 +77,32 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   details: {
-    alignItems: 'center',
-    height: '25%',
+    alignItems: "center",
+    height: "25%",
     padding: 5,
-    borderColor: 'blue',
-    borderWidth: 1
+    borderColor: "blue",
+    borderWidth: 1,
   },
-  title: {    
+  title: {
     fontFamily: "roboto-bold",
     fontSize: 16,
   },
   text: {
     fontFamily: "roboto-regular",
-    fontSize: 14,  
+    fontSize: 14,
+    textAlign: "left",
   },
 
   actions: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    height: "20%",
+    height: "15%",
     paddingVertical: 0,
-    borderColor: 'red',
-    borderWidth: 1
+    borderColor: "red",
+    borderWidth: 1,
+  },
+  author: {
+    fontWeight: "bold",
   },
 });

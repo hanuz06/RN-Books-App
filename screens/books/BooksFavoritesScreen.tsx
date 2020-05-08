@@ -1,16 +1,14 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-
-
-const BooksFavoritesScreen = (props:any) => {
+const BooksFavoritesScreen: React.FC = (props: any) => {
   return (
     <View>
       <Text></Text>
     </View>
-  )
-}
+  );
+};
 
-export default BooksFavoritesScreen
+export default BooksFavoritesScreen;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const BooksCategoriesScreen = () => {
+const BooksCategoriesScreen: React.FC  = () => {
   return (
     <View>
       <Text></Text>

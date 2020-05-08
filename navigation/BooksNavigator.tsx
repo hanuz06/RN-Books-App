@@ -7,7 +7,9 @@ import {
 } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
-import BooksListScreen from "../screens/books/BooksListScreen";
+import BooksListScreen, {
+  screenOptions as booksListScreenOptions,
+} from "../screens/books/BooksListScreen";
 import BooksFavoritesScreen from "../screens/books/BooksFavoritesScreen";
 import BooksCategoriesScreen from "../screens/books/BooksCategoriesScreen";
 import BookDetailsScreen from "../screens/books/BookDetailsScreen";
@@ -36,7 +38,7 @@ export const BooksNavigator = () => {
       <BooksStackNavigator.Screen
         name="BooksList"
         component={BooksListScreen}
-        // options={productsOverviewScreenOptions}
+        options={booksListScreenOptions}
       />
       <BooksStackNavigator.Screen
         name="BookDetails"

@@ -6,12 +6,13 @@ import * as Font from "expo-font";
 import ReduxThunk from "redux-thunk";
 
 import authReducer from "./store/reducers/authReducer";
-import bookReducer from "./store/reducers/booksReducer";
+import booksReducer from "./store/reducers/booksReducer";
 import AppNavigator from "./navigation/AppNavigator";
+import { bookState, BookActionsType } from "./types";
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  books: bookReducer,
+  books: booksReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
@@ -39,8 +40,7 @@ export default function App(): JSX.Element {
 
   return (
     <Provider store={store}>
-      <AppNavigator/>
+      <AppNavigator />
     </Provider>
   );
 }
-
