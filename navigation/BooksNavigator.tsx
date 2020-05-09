@@ -12,7 +12,9 @@ import BooksListScreen, {
 } from "../screens/books/BooksListScreen";
 import BooksFavoritesScreen from "../screens/books/BooksFavoritesScreen";
 import BooksCategoriesScreen from "../screens/books/BooksCategoriesScreen";
-import BookDetailsScreen from "../screens/books/BookDetailsScreen";
+import BookDetailsScreen, {
+  screenOptions as bookDetailsScreenOptions,
+} from "../screens/books/BookDetailsScreen";
 import LoginScreen from "../screens/users/LoginScreen";
 import RegistrationScreen from "../screens/users/RegistrationScreen";
 import Colors from "../constants/Colors";
@@ -22,10 +24,10 @@ const defaultNavOptions = {
     backgroundColor: Platform.OS === "android" ? Colors.primary : "",
   },
   headerTitleStyle: {
-    fontFamily: "roboto-bold",
+    fontFamily: "open-sans-bold",
   },
   headerBackTitleStyle: {
-    fontFamily: "roboto-regular",
+    fontFamily: "open-sans",
   },
   headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
 };
@@ -43,7 +45,7 @@ export const BooksNavigator = () => {
       <BooksStackNavigator.Screen
         name="BookDetails"
         component={BookDetailsScreen}
-        // options={productsOverviewScreenOptions}
+        options={bookDetailsScreenOptions}
       />
     </BooksStackNavigator.Navigator>
   );

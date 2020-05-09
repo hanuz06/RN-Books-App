@@ -25,4 +25,4 @@ class Books {
   }
 }
 
-export default Product;
+export default Books;
