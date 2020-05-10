@@ -80,8 +80,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "25%",
     padding: 5,
-    borderColor: "blue",
-    borderWidth: 1,
   },
   title: {
     fontFamily: "roboto-bold",
@@ -99,8 +97,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "15%",
     paddingVertical: 0,
-    borderColor: "red",
-    borderWidth: 1,
   },
   author: {
     fontWeight: "bold",

@@ -1,5 +1,20 @@
-const initialState = {};
+import { IAuthState, AuthActionsType, AUTHENTICATE, LOGOUT } from "../../types";
 
-export default (state: any = initialState, action:any) => {
-  return state;
+const initialState: IAuthState = {
+  token: null,
+  userId: null,
+};
+
+export default (state = initialState, action: AuthActionsType) => {
+  switch (action.type) {
+    case AUTHENTICATE:
+      return {
+        token: action.token,
+        userId: action.userId,
+      };
+    case LOGOUT:
+      return initialState;
+    default:
+      return state;
+  }
 };

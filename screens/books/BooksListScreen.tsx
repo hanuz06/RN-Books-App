@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   ListRenderItemInfo,
 } from "react-native";
-import { useSelector, useDispatch, DefaultRootState } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import * as booksActions from "../../store/actions/booksActions";
 
 import { BOOKS, Ibook } from "../../data/book-data";
@@ -22,7 +22,9 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   const [error, setError] = useState<string | null>();
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const books = useSelector<IBookState, IBook[]>((state:any)=> state.books.allBooks);
+  const books = useSelector<IBookState, IBook[]>(
+    (state: any) => state.books.allBooks
+  );
 
   // console.log("BBBBBBBBBBBBBBBBBBBBBBBBB ", books);
   const dispatch = useDispatch();
@@ -86,7 +88,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
       refreshing={isRefreshing}
       data={books}
       numColumns={2}
-      keyExtractor={(item:IBook): string => item.id}
+      keyExtractor={(item: IBook): string => item.id}
       renderItem={(itemData: ListRenderItemInfo<IBook>) => (
         <BookItem
           id={itemData.item.id}
@@ -97,12 +99,12 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
           onSelect={bookSelectHandler}
         >
           <Button
-            icon={<Icon name="details" size={15} color="#fff" />}
+            // icon={<Icon name="details" size={15} color="#fff" />}
             title="Details"
             type="solid"
             loading={false}
             raised={true}
-            onPress={() => console.log("Press button")}
+            onPress={() => bookSelectHandler(itemData.item.id)}
             buttonStyle={{ backgroundColor: Colors.primary }}
           />
         </BookItem>

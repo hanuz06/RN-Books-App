@@ -7,6 +7,8 @@ import {
 } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
+import Colors from "../constants/Colors";
+
 import BooksListScreen, {
   screenOptions as booksListScreenOptions,
 } from "../screens/books/BooksListScreen";
@@ -15,9 +17,10 @@ import BooksCategoriesScreen from "../screens/books/BooksCategoriesScreen";
 import BookDetailsScreen, {
   screenOptions as bookDetailsScreenOptions,
 } from "../screens/books/BookDetailsScreen";
-import LoginScreen from "../screens/users/LoginScreen";
+import AuthScreen, {
+  screenOptions as AuthScreenOptions,
+} from "../screens/users/AuthScreen";
 import RegistrationScreen from "../screens/users/RegistrationScreen";
-import Colors from "../constants/Colors";
 
 const defaultNavOptions = {
   headerStyle: {
@@ -48,6 +51,20 @@ export const BooksNavigator = () => {
         options={bookDetailsScreenOptions}
       />
     </BooksStackNavigator.Navigator>
+  );
+};
+
+const AuthStackNavigator = createStackNavigator();
+
+export const AuthNavigator = () => {
+  return (
+    <AuthStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <AuthStackNavigator.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={AuthScreenOptions}
+      />
+    </AuthStackNavigator.Navigator>
   );
 };
 

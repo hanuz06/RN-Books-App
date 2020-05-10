@@ -7,5 +7,5 @@
 
 export default {
     primary: "#e57307",
-    accent: "#2fc16b",
+    accent: "#757575",
   }
