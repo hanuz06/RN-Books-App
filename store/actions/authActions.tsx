@@ -1,7 +1,6 @@
 import { AUTHENTICATE, LOGOUT, IAuth } from "../../types";
 import { AsyncStorage } from "react-native";
-import axios from "axios";
-import apiKey from "../../env.env";
+import API_KEY from '../../env.env'
 
 let timer: any;
 
@@ -15,7 +14,7 @@ export const authenticate = (userId: any, token: any, expiryTime: any) => {
 export const signup = (email: string, password: string) => {
   return async (dispatch: any) => {
     const res: any = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey.webApi}`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
       {
         method: "POST",
         headers: {
@@ -40,10 +39,7 @@ export const signup = (email: string, password: string) => {
     }
 
     const resData = await res.json();
-    console.log("RESDATA ", typeof resData);
-    console.log("TYPES ", typeof resData.localId);
-    console.log("TYPES ", typeof resData.idToken);
-    console.log("TYPES ", typeof resData.expiresIn);
+    
     dispatch(
       authenticate(
         resData.localId,
@@ -62,7 +58,7 @@ export const signup = (email: string, password: string) => {
 export const login = (email: string, password: string) => {
   return async (dispatch: any) => {
     const res: any = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey.webApi}`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,
       {
         method: "POST",
         headers: {
@@ -99,7 +95,7 @@ export const login = (email: string, password: string) => {
     );
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000
-    );    
+    );
     saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   };
 };

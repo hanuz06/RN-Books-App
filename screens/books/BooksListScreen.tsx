@@ -25,8 +25,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   const books = useSelector<IBookState, IBook[]>(
     (state: any) => state.books.allBooks
   );
-
-  // console.log("BBBBBBBBBBBBBBBBBBBBBBBBB ", books);
+  
   const dispatch = useDispatch();
 
   const loadBooks = useCallback(async () => {
@@ -55,8 +54,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
     });
   }, [dispatch, loadBooks]);
 
-  const bookSelectHandler = (id: string): void => {
-    console.log("book selected");
+  const bookSelectHandler = (id: string): void => {    
     props.navigation.navigate("BookDetails", {
       id: id,
     });

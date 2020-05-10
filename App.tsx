@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import ReduxThunk from "redux-thunk";
-import apiKey from './env.env'
 
 import authReducer from "./store/reducers/authReducer";
 import booksReducer from "./store/reducers/booksReducer";

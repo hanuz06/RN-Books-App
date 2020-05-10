@@ -8,8 +8,8 @@ import {
   TouchableNativeFeedback,
   Platform,
 } from "react-native";
-// import Card from "./Card";
-import { Card, ListItem, Button, Icon } from "react-native-elements";
+
+import { Card } from "react-native-elements";
 
 const BookItem: React.FC = (props: any) => {
   let TouchableCmp: any = TouchableOpacity;
