@@ -18,7 +18,7 @@ import * as yup from "yup";
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
 import * as authActions from "../../store/actions/authActions";
@@ -30,11 +30,17 @@ const AuthScreen = (props: any): JSX.Element => {
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const dispatch = useDispatch();
 
+  const errorMessage: any = useSelector<any>(
+    (state) => state.auth.errorMessage
+  );
+
   useEffect(() => {
-    if (error) {
-      Alert.alert("An Error Occurred!", error, [{ text: "Okay" }]);
+    if (errorMessage) {
+      Alert.alert("An Error Occurred!", errorMessage, [
+        { text: "Okay", onPress: () => authActions.clearErrorMessage() },
+      ]);
     }
-  }, [error, Alert]);
+  }, [errorMessage]);
 
   const authHandler = (formData: IFormInput) => {
     let action;
@@ -48,6 +54,7 @@ const AuthScreen = (props: any): JSX.Element => {
     try {
       dispatch(action);
     } catch (err) {
+      console.log("errror ", err.message);
       setError(err.message);
     }
     setIsLoading(false);

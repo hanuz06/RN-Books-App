@@ -1,14 +1,43 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from "react";
+import { StyleSheet, Text, View, Platform } from "react-native";
 
-const BooksCategoriesScreen: React.FC  = () => {
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButton from "../../components/HeaderButton";
+
+import Colors from "../../constants/Colors";
+import { useSelector, useDispatch } from "react-redux";
+
+const BooksCategoriesScreen: React.FC = () => {
   return (
-    <View>
-      <Text></Text>
+    <View style={styles.mainContainer}>
+      <Text>BOOK CATEGORIES</Text>
     </View>
-  )
-}
+  );
+};
 
-export default BooksCategoriesScreen
+export const screenOptions = (navData) => {
+  return {
+    headerTitle: "Book Categories",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
+};
 
-const styles = StyleSheet.create({})
+export default BooksCategoriesScreen;
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

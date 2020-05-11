@@ -6,9 +6,15 @@ import {
   FlatList,
   ActivityIndicator,
   ListRenderItemInfo,
+  Platform,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as booksActions from "../../store/actions/booksActions";
+import * as authA from "../../store/actions/authActions";
+
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButton from "../../components/HeaderButton";
 
 import { BOOKS, Ibook } from "../../data/book-data";
 import { IBook, IBookState } from "../../types";
@@ -25,7 +31,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   const books = useSelector<IBookState, IBook[]>(
     (state: any) => state.books.allBooks
   );
-  
+
   const dispatch = useDispatch();
 
   const loadBooks = useCallback(async () => {
@@ -54,7 +60,15 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
     });
   }, [dispatch, loadBooks]);
 
-  const bookSelectHandler = (id: string): void => {    
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An Error Occurred!", error, [
+        { text: "Okay", onPress: () => authActions.clearErrorMessage() },
+      ]);
+    }
+  }, [error]);
+
+  const bookSelectHandler = (id: string): void => {
     props.navigation.navigate("BookDetails", {
       id: id,
     });
@@ -114,6 +128,17 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
 export const screenOptions = (navData) => {
   return {
     headerTitle: "All books",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
   };
 };
 

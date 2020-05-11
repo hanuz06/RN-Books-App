@@ -3,6 +3,8 @@ export const UPDATE_BOOKS = "UPDATE_BOOKS";
 export const CREATE_BOOK = "CREATE_BOOK";
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
+export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
+export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
 
 export interface IBook {
   id: string;
@@ -29,8 +31,9 @@ export interface IBookState {
 }
 
 export interface IAuthState {
-  token: null | string;
   userId: null | string;
+  token: null | string;
+  errorMessage: null | string;
 }
 
 interface IAuthenticate {
@@ -40,10 +43,23 @@ interface IAuthenticate {
 }
 
 interface ILogout {
-  type: typeof LOGOUT;  
+  type: typeof LOGOUT;
 }
 
-export type AuthActionsType = IAuthenticate | ILogout;
+interface ISetErrorMessage {
+  type: typeof SET_ERROR_MESSAGE;
+  errorMessage: null | string;
+}
+
+interface IClearErrorMessage {
+  type: typeof CLEAR_ERROR_MESSAGE;
+}
+
+export type AuthActionsType =
+  | IAuthenticate
+  | ILogout
+  | ISetErrorMessage
+  | IClearErrorMessage;
 
 export interface IFormInput {
   email: string;
