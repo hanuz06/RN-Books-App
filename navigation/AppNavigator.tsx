@@ -6,7 +6,7 @@ import { BooksNavigator, AuthNavigator,BooksAppNavigator} from "./BooksNavigator
 
 const AppNavigator = (): JSX.Element => {
   const isAuth = useSelector<any>((state) => !!state.auth.token);
-
+  
   return (
     <NavigationContainer>
       {!isAuth && <AuthNavigator />}

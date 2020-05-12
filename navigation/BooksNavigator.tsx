@@ -1,6 +1,10 @@
 import React from "react";
-import { Platform, SafeAreaView, Button, View } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { Platform, SafeAreaView, Button, View, Easing } from "react-native";
+import {
+  createStackNavigator,
+  TransitionPresets,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 import {
   createDrawerNavigator,
   DrawerItemList,
@@ -28,24 +32,57 @@ import AuthScreen, {
 } from "../screens/users/AuthScreen";
 import RegistrationScreen from "../screens/users/RegistrationScreen";
 
-const defaultNavOptions = {
+// const config: any = {
+//   animation: "spring",
+//   config: {
+//     stiffness: 1000,
+//     damping: 50,
+//     mass: 3,
+//     overshootClamping: false,
+//     restDisplacementThreshold: 0.01,
+//     restSpeedThreshold: 0.01,
+//   },
+// };
+
+const openCloseConfig: any = {
+  animation: "timing",
+  config: {
+    duration: 300,
+    easing: Easing.linear,
+  },
+};
+
+const defaultNavOptions: any = {
   headerStyle: {
     backgroundColor: Platform.OS === "android" ? Colors.primary : "",
   },
   headerTitleStyle: {
-    fontFamily: "open-sans-bold",
+    fontFamily: "roboto-bold",
   },
   headerBackTitleStyle: {
-    fontFamily: "open-sans",
+    fontFamily: "roboto-regular",
   },
   headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
+  gestureEnabled: true,
+  gestureDirection: "horizontal",
+  ...TransitionPresets.SlideFromRightIOS,
+  // CardStyleInterpolators: CardStyleInterpolators.forHorizontalIOS,
+  transitionSpec: {
+    open: openCloseConfig,
+    close: openCloseConfig,
+  },
 };
 
 const BooksStackNavigator = createStackNavigator();
 
 export const BooksNavigator = () => {
   return (
-    <BooksStackNavigator.Navigator screenOptions={defaultNavOptions}>
+    <BooksStackNavigator.Navigator
+      screenOptions={defaultNavOptions}
+      // mode="modal"
+      headerMode="float"
+      // animation="fade"
+    >
       <BooksStackNavigator.Screen
         name="BooksList"
         component={BooksListScreen}

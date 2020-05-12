@@ -2,16 +2,27 @@ import React from "react";
 import {
   View,
   Text,
-  Image,
+  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
 } from "react-native";
 
-import { Card } from "react-native-elements";
+import { Image, Card } from "react-native-elements";
 
-const BookItem: React.FC = (props: any) => {
+interface Props {
+  props: {
+    onSelect: any;
+    id: string;
+    image: string;
+    description: string;
+    authors: string[];
+    children: any;
+  };
+}
+
+const BookItem: React.FC<Props> = (props: any) => {
   let TouchableCmp: any = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -36,14 +47,19 @@ const BookItem: React.FC = (props: any) => {
         <TouchableCmp onPress={() => props.onSelect(props.id)} useForeground>
           <View>
             <View style={styles.imageContainer}>
-              <Image style={styles.image} source={{ uri: props.image }} />
+              <Image
+                style={styles.image}
+                source={{ uri: props.image }}
+                PlaceholderContent={<ActivityIndicator />}
+              />
             </View>
             <View style={styles.details}>
               <Text numberOfLines={3} style={styles.text}>
                 {props.description}
               </Text>
               <Text numberOfLines={2} style={styles.text}>
-                <Text style={styles.author}>Authors:</Text> {props.authors}
+                <Text style={styles.author}>Authors: </Text>{" "}
+                {props.authors.join(", ")}
               </Text>
             </View>
             <View style={styles.actions}>{props.children}</View>
@@ -77,7 +93,6 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   details: {
-    alignItems: "center",
     height: "25%",
     padding: 5,
   },
@@ -88,17 +103,15 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "roboto-regular",
     fontSize: 14,
-    textAlign: "left",
+    paddingVertical: 3,
   },
 
-  actions: {
-    flexDirection: "row",
+  actions: {    
     justifyContent: "center",
     alignItems: "center",
-    height: "15%",
-    paddingVertical: 0,
+    height: "15%",    
   },
   author: {
-    fontWeight: "bold",
+    fontFamily: "roboto-bold",
   },
 });

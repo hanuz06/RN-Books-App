@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as booksActions from "../../store/actions/booksActions";
-import * as authA from "../../store/actions/authActions";
+import * as authActions from "../../store/actions/authActions";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/HeaderButton";
@@ -30,6 +30,10 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
 
   const books = useSelector<IBookState, IBook[]>(
     (state: any) => state.books.allBooks
+  );
+
+  const favBooks = useSelector<IBookState, IBook[]>(
+    (state: any) => state.books.favBooks
   );
 
   const dispatch = useDispatch();
@@ -69,8 +73,10 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   }, [error]);
 
   const bookSelectHandler = (id: string): void => {
+    const isFavorite = favBooks.some((book) => book.id === id);    
     props.navigation.navigate("BookDetails", {
       id: id,
+      isFav: isFavorite,
     });
   };
 
@@ -89,10 +95,6 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
       </View>
     );
   }
-
-  // interface IFlatList {
-  //   data: IBook[]
-  // }
 
   return (
     <FlatList

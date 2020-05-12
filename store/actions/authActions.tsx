@@ -30,13 +30,13 @@ export const authenticate = (
   userId: string,
   token: string,
   expiryTime: number
-) => {  
+) => {
   return async (dispatch: any) => {
     const reply = await dispatch({
       type: AUTHENTICATE,
       userId: userId,
       token: token,
-    });   
+    });
     dispatch(setLogoutTimer(expiryTime));
   };
 };
@@ -115,7 +115,7 @@ export const login = (email: string, password: string) => {
       }
 
       const resData = await res.json();
-      
+
       dispatch(
         authenticate(
           resData.localId,
@@ -127,7 +127,7 @@ export const login = (email: string, password: string) => {
         new Date().getTime() + parseInt(resData.expiresIn) * 1000
       );
       saveDataToStorage(resData.idToken, resData.localId, expirationDate);
-    } catch (err) {      
+    } catch (err) {
       dispatch(setErrorMessage(err.message));
       // throw err;
     }
@@ -149,8 +149,8 @@ const clearLogoutTimer = () => {
 const setLogoutTimer = (expirationTime: number) => {
   return (dispatch: any) => {
     timer = setTimeout(() => {
-      dispatch(logout());
-    }, expirationTime);
+      dispatch(logout());     
+    }, expirationTime);    
   };
 };
 

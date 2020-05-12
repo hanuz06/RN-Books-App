@@ -9,7 +9,6 @@ import authReducer from "./store/reducers/authReducer";
 import booksReducer from "./store/reducers/booksReducer";
 import AppNavigator from "./navigation/AppNavigator";
 
-
 const rootReducer = combineReducers({
   auth: authReducer,
   books: booksReducer,
@@ -28,7 +27,7 @@ const fetchFonts = () => {
 
 export default function App(): JSX.Element {
   const [fontLoaded, setFontLoaded] = useState<boolean>(false);
-
+  
   if (!fontLoaded) {
     return (
       <AppLoading

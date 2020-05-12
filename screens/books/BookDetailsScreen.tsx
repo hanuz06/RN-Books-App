@@ -1,37 +1,68 @@
-import React, { Children } from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
-  Button,
   Dimensions,
   ActivityIndicator,
   Platform,
 } from "react-native";
-import { Image } from "react-native-elements";
+import { Image, Button } from "react-native-elements";
+import * as bookActions from "../../store/actions/booksActions";
 
 import HeaderButton from "../../components/HeaderButton";
 
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-import { IBook } from "../../types";
+import { IBook, IBookState } from "../../types";
 import moment from "moment";
 
 import Colors from "../../constants/Colors";
 
 const BookDetailsScreen: React.FC = (props: any): JSX.Element => {
+  let isFavorite: boolean;
+
   const bookId: string = props.route.params.id;
+  isFavorite = props.route.params.isFav;
+
   const selectedBook: any = useSelector<any>((state) =>
     state.books.allBooks.find((book: IBook) => book.id === bookId)
   );
+
+  const favBooks = useSelector<IBookState, IBook[]>(
+    (state: any) => state.books.favBooks
+  );
+
+  isFavorite = favBooks.some((book) => book.id === bookId);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const favStar = Platform.OS === "android" ? "md-star" : "ios-star";
+    const noFavStar =
+      Platform.OS === "android" ? "md-star-outline" : "ios-star-outline";
+
+    props.navigation.setOptions({
+      headerRight: (): JSX.Element => (
+        <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item
+            title="Favorite"
+            iconName={isFavorite ? favStar : noFavStar}
+            onPress={() => {
+              dispatch(bookActions.toggleBookFav(bookId));
+            }}
+          />
+        </HeaderButtons>
+      ),
+    });
+  }, [dispatch, isFavorite]);
 
   return (
     <ScrollView>
       <View style={styles.mainContainer}>
         <View style={styles.imageContainer}>
-          {/* <Image style={styles.image} source={{ uri: selectedBook.thumbnailUrl }} /> */}
           <Image
             source={{ uri: selectedBook.thumbnailUrl }}
             style={styles.image}
@@ -91,20 +122,9 @@ const BookDetailsScreen: React.FC = (props: any): JSX.Element => {
   );
 };
 
-export const screenOptions = (navData: any):any => {
+export const screenOptions = (navData: any): any => {
   return {
     headerTitle: "Book Details",
-    headerRight: ():JSX.Element => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item
-          title="Book"
-          iconName={Platform.OS === "android" ? "md-star" : "ios-star"}
-          onPress={() => {
-            console.log('Saved to favorites')
-          }}
-        />
-      </HeaderButtons>
-    ),
   };
 };
 
@@ -137,7 +157,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily: "open-sans-bold",
+    fontFamily: "roboto-bold",
   },
   textContainer: {
     flexDirection: "row",
@@ -146,9 +166,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    fontFamily: "open-sans",
+    fontFamily: "roboto-regular",
   },
   boldStyle: {
-    fontFamily: "open-sans-bold",
+    fontFamily: "roboto-bold",
   },
 });

@@ -52,7 +52,7 @@ const AuthScreen = (props: any): JSX.Element => {
     setError(null);
     setIsLoading(true);
     try {
-      dispatch(action);
+      dispatch(action);     
     } catch (err) {
       console.log("errror ", err.message);
       setError(err.message);
@@ -67,7 +67,7 @@ const AuthScreen = (props: any): JSX.Element => {
       .required("Password required")
       .min(6, "Minimum 6 characters required"),
   });
-
+    
   return (
     <KeyboardAvoidingView style={styles.screen}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
