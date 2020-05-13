@@ -22,17 +22,16 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
 import * as authActions from "../../store/actions/authActions";
-import { IFormInput } from "../../types";
+import { IFormInput, IAuthState } from "../../types";
 
-const AuthScreen = (props: any): JSX.Element => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<null | "">(null);
+const AuthScreen = (props: any): JSX.Element => {  
   const [isSignup, setIsSignup] = useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const errorMessage: any = useSelector<any>(
+  const errorMessage = useSelector<any, string>(
     (state) => state.auth.errorMessage
   );
+  const isLoading = useSelector<any, boolean>((state) => state.auth.isLoading);
 
   useEffect(() => {
     if (errorMessage) {
@@ -42,22 +41,14 @@ const AuthScreen = (props: any): JSX.Element => {
     }
   }, [errorMessage]);
 
-  const authHandler = (formData: IFormInput) => {
+  const authHandler = (formData: IFormInput): void => {
     let action;
     if (isSignup) {
       action = authActions.signup(formData.email, formData.password);
     } else {
       action = authActions.login(formData.email, formData.password);
     }
-    setError(null);
-    setIsLoading(true);
-    try {
-      dispatch(action);     
-    } catch (err) {
-      console.log("errror ", err.message);
-      setError(err.message);
-    }
-    setIsLoading(false);
+    dispatch(action);
   };
 
   const ReviewSchema = yup.object().shape({
@@ -67,7 +58,7 @@ const AuthScreen = (props: any): JSX.Element => {
       .required("Password required")
       .min(6, "Minimum 6 characters required"),
   });
-    
+
   return (
     <KeyboardAvoidingView style={styles.screen}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -79,6 +70,7 @@ const AuthScreen = (props: any): JSX.Element => {
             }}
             validationSchema={ReviewSchema}
             onSubmit={(values: IFormInput, { resetForm }) => {
+              dispatch(authActions.clearErrorMessage());
               authHandler(values);
               resetForm();
             }}

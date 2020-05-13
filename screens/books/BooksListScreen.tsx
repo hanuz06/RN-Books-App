@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import {
   StyleSheet,
   Text,
@@ -127,7 +127,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   );
 };
 
-export const screenOptions = (navData) => {
+export const screenOptions = (navData:any) => {
   return {
     headerTitle: "All books",
     headerLeft: () => (
@@ -144,7 +144,7 @@ export const screenOptions = (navData) => {
   };
 };
 
-export default BooksListScreen;
+export default memo(BooksListScreen);
 
 const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },

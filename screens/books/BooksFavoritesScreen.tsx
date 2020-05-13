@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, Platform, View, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Platform,
+  View,
+  FlatList,
+  ListRenderItem,
+  ListRenderItemInfo,
+} from "react-native";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/HeaderButton";
@@ -10,18 +18,19 @@ import * as bookActions from "../../store/actions/booksActions";
 import { IBookState, IBook } from "../../types";
 import FavBookItems from "../../components/FavBookItems";
 
-interface Props {
+type Props = {
   props: {
-    onSelect: any;
+    onSelect: () => {};
     id: string;
+    title: string;
     image: string;
     description: string;
     authors: string[];
-    children: any;
+    categories: string[];
   };
-}
+};
 
-const BooksFavoritesScreen: React.FC<Props> = (props) => {
+const BooksFavoritesScreen: React.FC<Props> = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -42,7 +51,7 @@ const BooksFavoritesScreen: React.FC<Props> = (props) => {
       // refreshing={isRefreshing}
       data={favBooks}
       keyExtractor={(item: IBook): string => item.id}
-      renderItem={(itemData) => (
+      renderItem={(itemData: ListRenderItemInfo<IBook>): JSX.Element => (
         <FavBookItems
           id={itemData.item.id}
           title={itemData.item.title}
@@ -57,7 +66,7 @@ const BooksFavoritesScreen: React.FC<Props> = (props) => {
   );
 };
 
-export const screenOptions = (navData:any) => {
+export const screenOptions = (navData: any) => {
   return {
     headerTitle: "Favorite books",
     headerLeft: () => (

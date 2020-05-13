@@ -11,18 +11,18 @@ import {
 
 import { Image, Card } from "react-native-elements";
 
-interface Props {
-  props: {
-    onSelect: any;
-    id: string;
-    image: string;
-    description: string;
-    authors: string[];
-    children: any;
-  };
-}
+// interface Props {
+//   props: {
+//     onSelect: any;
+//     id: string;
+//     image: string;
+//     description: string;
+//     authors: string[];
+//     children: any;
+//   };
+// }
 
-const BookItem: React.FC<Props> = (props: any) => {
+const BookItem: React.FC = (props: any):JSX.Element => {
   let TouchableCmp: any = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -106,10 +106,10 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
 
-  actions: {    
+  actions: {
     justifyContent: "center",
     alignItems: "center",
-    height: "15%",    
+    height: "15%",
   },
   author: {
     fontFamily: "roboto-bold",

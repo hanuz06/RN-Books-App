@@ -5,15 +5,40 @@ import {
   View,
   Platform,
   TouchableOpacity,
-  TouchableNativeFeedback,
-  Dimensions,
+  TouchableNativeFeedback,  
   ActivityIndicator,
 } from "react-native";
 
 import { Image, Card } from "react-native-elements";
 import moment from "moment";
 
-const FavBookItems: React.FC = (props: any): JSX.Element => {
+type Props = {
+  props: {
+    onSelect:  ()=>{},
+    id: string,
+    title: string,
+    image: string,
+    description: string,
+    authors: string[],
+    categories: string[]
+    
+  },
+};
+
+// interface Props {
+//   props: {
+//     onSelect:  ()=>{},
+//     id: string,
+//     title: string,
+//     image: string,
+//     description: string,
+//     authors: string[],
+//     categories: string[]
+    
+//   },
+// };
+
+const FavBookItems: React.FC<Props> = (props:any): JSX.Element => {
   let TouchableCmp: any = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {

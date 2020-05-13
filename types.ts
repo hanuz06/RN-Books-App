@@ -6,6 +6,7 @@ export const LOGOUT = "LOGOUT";
 export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
 export const CLEAR_ERROR_MESSAGE = "CLEAR_ERROR_MESSAGE";
 export const TOGGLE_FAV_BOOK = "TOGGLE_FAV_BOOK";
+export const SET_LOADING = "SET_LOADING";
 
 export interface IBook {
   id: string;
@@ -34,7 +35,7 @@ interface IToggleBookFav {
   id: string;
 }
 
-export type BookActionsType = ISetBooks | IToggleBookFav
+export type BookActionsType = ISetBooks | IToggleBookFav;
 
 export interface IBookState {
   allBooks: IBook[];
@@ -45,6 +46,7 @@ export interface IAuthState {
   userId: null | string;
   token: null | string;
   errorMessage: null | string;
+  isLoading: boolean;
 }
 
 interface IAuthenticate {
@@ -66,11 +68,16 @@ interface IClearErrorMessage {
   type: typeof CLEAR_ERROR_MESSAGE;
 }
 
+interface ISetLoading {
+  type: typeof SET_LOADING;
+}
+
 export type AuthActionsType =
   | IAuthenticate
   | ILogout
   | ISetErrorMessage
-  | IClearErrorMessage;
+  | IClearErrorMessage
+  | ISetLoading;
 
 export interface IFormInput {
   email: string;
