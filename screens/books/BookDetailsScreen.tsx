@@ -124,7 +124,8 @@ const BookDetailsScreen: React.FC = (props: any): JSX.Element => {
 
 export const screenOptions = (navData: any): any => {
   return {
-    headerTitle: "Book Details",
+    headerTitle: "Book Details",headerBackTitle: 'All Books', // for iOS
+    headerTruncatedBackTitle: 'Back' // for iOS
   };
 };
 

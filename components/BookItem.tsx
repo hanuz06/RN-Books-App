@@ -22,7 +22,7 @@ import { Image, Card } from "react-native-elements";
 //   };
 // }
 
-const BookItem: React.FC = (props: any):JSX.Element => {
+const BookItem: React.FC = (props: any): JSX.Element => {
   let TouchableCmp: any = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -30,19 +30,7 @@ const BookItem: React.FC = (props: any):JSX.Element => {
   }
 
   return (
-    <Card
-      containerStyle={{
-        flex: 1,
-        maxHeight: 400,
-        width: "100%",
-        maxWidth: 225,
-        marginHorizontal: 5,
-        marginVertical: 5,
-        borderRadius: 10,
-        padding: 2,
-        elevation: 3,
-      }}
-    >
+    <Card containerStyle={styles.cardStyle}>
       <View style={styles.touchable}>
         <TouchableCmp onPress={() => props.onSelect(props.id)} useForeground>
           <View>
@@ -73,13 +61,17 @@ const BookItem: React.FC = (props: any):JSX.Element => {
 export default BookItem;
 
 const styles = StyleSheet.create({
-  // book: {
-  //   flex: 1,
-  //   height: 450,
-  //   width: 50,
-  //   marginHorizontal: 5,
-  //   marginVertical: 10,
-  // },
+  cardStyle: {
+    flex: 1,
+    maxHeight: 420,
+    width: "100%",
+    maxWidth: 225,
+    marginHorizontal: 5,
+    marginVertical: 5,
+    borderRadius: 10,
+    padding: 2,
+    elevation: 3,
+  },
   touchable: { overflow: "hidden", borderRadius: 10, width: "100%" },
   imageContainer: {
     width: "100%",
@@ -96,13 +88,9 @@ const styles = StyleSheet.create({
     height: "25%",
     padding: 5,
   },
-  title: {
-    fontFamily: "roboto-bold",
-    fontSize: 16,
-  },
   text: {
     fontFamily: "roboto-regular",
-    fontSize: 14,
+    fontSize: 16,
     paddingVertical: 3,
   },
 

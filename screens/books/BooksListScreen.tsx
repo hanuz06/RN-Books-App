@@ -73,7 +73,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   }, [error]);
 
   const bookSelectHandler = (id: string): void => {
-    const isFavorite = favBooks.some((book) => book.id === id);    
+    const isFavorite = favBooks.some((book) => book.id === id);
     props.navigation.navigate("BookDetails", {
       id: id,
       isFav: isFavorite,
@@ -118,16 +118,17 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
             type="solid"
             loading={false}
             raised={true}
-            onPress={() => bookSelectHandler(itemData.item.id)}
-            buttonStyle={{ backgroundColor: Colors.primary }}
+            // onPress={() => bookSelectHandler(itemData.item.id)}
+            onPress={() => dispatch(booksActions.searchBook())}
+            buttonStyle={styles.buttonStyle}
           />
-        </BookItem>
-      )}
+        </BookItem>  
+      )}a
     />
   );
 };
 
-export const screenOptions = (navData:any) => {
+export const screenOptions = (navData: any) => {
   return {
     headerTitle: "All books",
     headerLeft: () => (
@@ -147,5 +148,15 @@ export const screenOptions = (navData:any) => {
 export default memo(BooksListScreen);
 
 const styles = StyleSheet.create({
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonStyle: {
+    backgroundColor: Colors.primary,
+    borderRadius: 45,
+    width: 90,
+    marginTop: 5
+  },
 });

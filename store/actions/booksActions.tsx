@@ -4,6 +4,25 @@ import {
   CREATE_BOOK,
   TOGGLE_FAV_BOOK,
 } from "../../types";
+import firebase from "firebase";
+
+export const searchBook = () => {
+  return async (dispatch: any, getState: any) => {
+    let ref = firebase.database().ref("books");
+    ref
+      // .child("books")
+      .orderByChild("title")
+      .equalTo(true)
+      .on("value", function (snapshot) {
+        console.log(snapshot.val());
+        snapshot.forEach(function (childSnapshot) {
+          var childKey = childSnapshot.key;
+          var childData = childSnapshot.val();
+          console.log(childKey);
+        });
+      });
+  };
+};
 
 export const fetchBooks = () => {
   return async (dispatch: any, getState: any) => {
