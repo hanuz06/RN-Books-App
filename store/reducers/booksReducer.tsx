@@ -1,15 +1,17 @@
 import {
-  SET_BOOKS,  
+  SET_BOOKS,
   CREATE_BOOK,
   IBookState,
   BookActionsType,
-  TOGGLE_FAV_BOOK,  
+  TOGGLE_FAV_BOOK,
   IBook,
 } from "../../types";
 
 const initialState: IBookState = {
   allBooks: [],
   favBooks: [],
+  booksByCategories: {},
+  bookCategories: []
 };
 
 export default (state = initialState, action: BookActionsType) => {
@@ -18,6 +20,8 @@ export default (state = initialState, action: BookActionsType) => {
       return {
         ...state,
         allBooks: action.loadedBooks,
+        booksByCategories: action.booksByCategories,
+        booksCategories: action.bookCategories
       };
     case TOGGLE_FAV_BOOK:
       const existingIndex: number = state.favBooks.findIndex(
@@ -32,7 +36,7 @@ export default (state = initialState, action: BookActionsType) => {
         const book: any = state.allBooks.find((book) => book.id === action.id);
 
         return { ...state, favBooks: state.favBooks.concat(book) };
-      }    
+      }
     default:
       return state;
   }

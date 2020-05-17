@@ -3,26 +3,10 @@ import {
   UPDATE_BOOK,
   CREATE_BOOK,
   TOGGLE_FAV_BOOK,
+  IBook,
 } from "../../types";
-import firebase from "firebase";
-
-export const searchBook = () => {
-  return async (dispatch: any, getState: any) => {
-    let ref = firebase.database().ref("books");
-    ref
-      // .child("books")
-      .orderByChild("title")
-      .equalTo(true)
-      .on("value", function (snapshot) {
-        console.log(snapshot.val());
-        snapshot.forEach(function (childSnapshot) {
-          var childKey = childSnapshot.key;
-          var childData = childSnapshot.val();
-          console.log(childKey);
-        });
-      });
-  };
-};
+import Category from "../../models/category";
+import { categoryColors } from "../../constants/Colors";
 
 export const fetchBooks = () => {
   return async (dispatch: any, getState: any) => {
@@ -35,12 +19,46 @@ export const fetchBooks = () => {
         throw new Error("Something went wrong!");
       }
 
+      // console.log('GETSTATE ', getState().auth.email)
+
+      // all books fetched from Firebase
       const loadedBooks = await response.json();
-      // console.log("loadedBooks loadedBooks ", loadedBooks);
+
+      const categoriesArray: string[] = loadedBooks.map((book: IBook) => [
+        ...book.categories,
+      ]);
+
+      // Creates a set of unique names of categories
+      const setUniqueCategories = new Set(categoriesArray.flat());
+      const uniqueCategoriesArray = Array.from(setUniqueCategories).sort();
+
+      // Set categories that include id, category name, color
+      const categoriesData = uniqueCategoriesArray.map((category, index) => {
+        const randomInt = Math.floor(Math.random() * 10);
+        return new Category(
+          (index + 1).toString(),
+          category,
+          categoryColors[randomInt]
+        );
+      });
+
+      const booksByCategories: any = {};
+      uniqueCategoriesArray.map((category: string) => {
+        const booksArray: object[] = [];
+        loadedBooks.map((book: IBook) => {
+          if (book.categories.includes(category)) {
+            booksArray.push(book);
+          }
+        });
+        booksByCategories[category] = booksArray;
+      });
+      // console.log('booksby categories ', booksByCategories)
 
       dispatch({
         type: SET_BOOKS,
         loadedBooks: loadedBooks,
+        booksByCategories: booksByCategories,
+        bookCategories: categoriesData,
       });
     } catch (err) {
       throw err;
@@ -50,8 +68,6 @@ export const fetchBooks = () => {
 
 export const toggleBookFav = (id: string) => {
   return async (dispatch: any, getState: any) => {
-    // console.log("GETSTATEDDDD ", getState);
-    // console.log("ididvidididid ", id);
     dispatch({ type: TOGGLE_FAV_BOOK, id: id });
   };
 };

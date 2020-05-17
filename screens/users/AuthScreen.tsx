@@ -24,31 +24,38 @@ import Colors from "../../constants/Colors";
 import * as authActions from "../../store/actions/authActions";
 import { IFormInput, IAuthState } from "../../types";
 
-const AuthScreen = (props: any): JSX.Element => {  
+const AuthScreen = (props: any): JSX.Element => {
+  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSignup, setIsSignup] = useState<boolean>(false);
-  const dispatch = useDispatch();
-
-  const errorMessage = useSelector<any, string>(
-    (state) => state.auth.errorMessage
-  );
-  const isLoading = useSelector<any, boolean>((state) => state.auth.isLoading);
+  const dispatch = useDispatch(); 
 
   useEffect(() => {
-    if (errorMessage) {
-      Alert.alert("An Error Occurred!", errorMessage, [
-        { text: "Okay", onPress: () => authActions.clearErrorMessage() },
+    if (error) {
+      Alert.alert("An Error Occurred!", error, [
+        { text: "Okay", onPress: () => setError('') },
       ]);
+      return;
     }
-  }, [errorMessage]);
+  }, [error]);
 
-  const authHandler = (formData: IFormInput): void => {
+  const authHandler = async (formData: IFormInput) => {
     let action;
     if (isSignup) {
       action = authActions.signup(formData.email, formData.password);
     } else {
       action = authActions.login(formData.email, formData.password);
     }
-    dispatch(action);
+    setIsLoading(true);
+
+    try {
+      await dispatch(action);
+      props.navigation.navigate("BooksList");
+    } catch (err) {      
+      setError(err);
+      setIsLoading(false);
+    }
+    setIsLoading(false);
   };
 
   const ReviewSchema = yup.object().shape({
@@ -69,8 +76,8 @@ const AuthScreen = (props: any): JSX.Element => {
               password: "",
             }}
             validationSchema={ReviewSchema}
-            onSubmit={(values: IFormInput, { resetForm }) => {
-              dispatch(authActions.clearErrorMessage());
+            onSubmit={(values: IFormInput, { resetForm }) => {              
+              setError("");
               authHandler(values);
               resetForm();
             }}

@@ -2,46 +2,25 @@ import {
   IAuthState,
   AuthActionsType,
   AUTHENTICATE,
-  LOGOUT,
-  SET_ERROR_MESSAGE,
-  CLEAR_ERROR_MESSAGE,
-  SET_LOADING,
+  LOGOUT,  
 } from "../../types";
 
 const initialState: IAuthState = {
   token: null,
   userId: null,
-  errorMessage: null,
-  isLoading: false,
+  email: '', 
 };
 
 export default (state = initialState, action: AuthActionsType) => {
   switch (action.type) {
     case AUTHENTICATE:
-      return {
-        // ...state,
+      return {        
         token: action.token,
         userId: action.userId,
-        isLoading: false
+        email: action.email,        
       };
     case LOGOUT:
-      return initialState;
-    case SET_ERROR_MESSAGE:
-      return {
-        ...state,
-        errorMessage: action.errorMessage,
-        isLoading: false
-      };
-    case CLEAR_ERROR_MESSAGE:
-      return {
-        ...state,
-        errorMessage: null,
-      };
-    case SET_LOADING:
-      return {
-        ...state,
-        isLoading: true,
-      };
+      return initialState;    
     default:
       return state;
   }

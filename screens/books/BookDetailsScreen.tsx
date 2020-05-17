@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,9 @@ import {
   Dimensions,
   ActivityIndicator,
   Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { Image, Button } from "react-native-elements";
 import * as bookActions from "../../store/actions/booksActions";
@@ -16,18 +19,24 @@ import HeaderButton from "../../components/HeaderButton";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-import { IBook, IBookState } from "../../types";
+import { IBook, IBookState, IAuthState } from "../../types";
 import moment from "moment";
 
 import Colors from "../../constants/Colors";
+import { setErrorMessage } from "../../store/actions/authActions";
 
 const BookDetailsScreen: React.FC = (props: any): JSX.Element => {
+  const [error, setError] = useState<boolean>(false);
   let isFavorite: boolean;
 
   const bookId: string = props.route.params.id;
   isFavorite = props.route.params.isFav;
 
-  const selectedBook: any = useSelector<any>((state) =>
+  const userToken = useSelector<IAuthState, string>(
+    (state: any) => state.auth.token
+  );
+
+  const selectedBook: any = useSelector<IBookState, IBook>((state: any) =>
     state.books.allBooks.find((book: IBook) => book.id === bookId)
   );
 
@@ -38,6 +47,32 @@ const BookDetailsScreen: React.FC = (props: any): JSX.Element => {
   isFavorite = favBooks.some((book) => book.id === bookId);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert(
+        "You need to login or signup first!",
+        "Do you want to login or signup?",
+        [
+          {
+            text: "Yes",
+            onPress: () => {
+              setError(false);
+              props.navigation.navigate("Auth");
+            },
+          },
+          {
+            text: "No",
+            onPress: () => {
+              setError(false);
+              return;
+            },
+            style: "cancel",
+          },
+        ]
+      );
+    }
+  }, [error]);
 
   useEffect(() => {
     const favStar = Platform.OS === "android" ? "md-star" : "ios-star";
@@ -51,7 +86,9 @@ const BookDetailsScreen: React.FC = (props: any): JSX.Element => {
             title="Favorite"
             iconName={isFavorite ? favStar : noFavStar}
             onPress={() => {
-              dispatch(bookActions.toggleBookFav(bookId));
+              userToken
+                ? dispatch(bookActions.toggleBookFav(bookId))
+                : setError(true);
             }}
           />
         </HeaderButtons>
@@ -60,72 +97,75 @@ const BookDetailsScreen: React.FC = (props: any): JSX.Element => {
   }, [dispatch, isFavorite]);
 
   return (
-    <ScrollView>
-      <View style={styles.mainContainer}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: selectedBook.thumbnailUrl }}
-            style={styles.image}
-            PlaceholderContent={<ActivityIndicator />}
-          />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView>
+        <View style={styles.mainContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: selectedBook.thumbnailUrl }}
+              style={styles.image}
+              PlaceholderContent={<ActivityIndicator />}
+            />
+          </View>
+          <View style={styles.details}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>{selectedBook.title}</Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>{selectedBook.description}</Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>
+                <Text style={{ ...styles.text, ...styles.boldStyle }}>
+                  Authors:{" "}
+                </Text>
+                {selectedBook.authors}
+              </Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>
+                <Text style={{ ...styles.text, ...styles.boldStyle }}>
+                  Pages:{" "}
+                </Text>
+                {selectedBook.pageCount}
+              </Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>
+                <Text style={{ ...styles.text, ...styles.boldStyle }}>
+                  Categories:{" "}
+                </Text>
+                {selectedBook.categories}
+              </Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>
+                <Text style={{ ...styles.text, ...styles.boldStyle }}>
+                  Status:{" "}
+                </Text>
+                {selectedBook.status}
+              </Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>
+                <Text style={{ ...styles.text, ...styles.boldStyle }}>
+                  Date published:{" "}
+                </Text>
+                {moment(selectedBook.publishedDate).format("DD MMM YYYY")}
+              </Text>
+            </View>
+          </View>
         </View>
-        <View style={styles.details}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>{selectedBook.title}</Text>
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>{selectedBook.description}</Text>
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              <Text style={{ ...styles.text, ...styles.boldStyle }}>
-                Authors:{" "}
-              </Text>
-              {selectedBook.authors}
-            </Text>
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              <Text style={{ ...styles.text, ...styles.boldStyle }}>
-                Pages:{" "}
-              </Text>
-              {selectedBook.pageCount}
-            </Text>
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              <Text style={{ ...styles.text, ...styles.boldStyle }}>
-                Categories:{" "}
-              </Text>
-              {selectedBook.categories}
-            </Text>
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              <Text style={{ ...styles.text, ...styles.boldStyle }}>
-                Status:{" "}
-              </Text>
-              {selectedBook.status}
-            </Text>
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.text}>
-              <Text style={{ ...styles.text, ...styles.boldStyle }}>
-                Date published:{" "}
-              </Text>
-              {moment(selectedBook.publishedDate).format("DD MMM YYYY")}
-            </Text>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 
 export const screenOptions = (navData: any): any => {
   return {
-    headerTitle: "Book Details",headerBackTitle: 'All Books', // for iOS
-    headerTruncatedBackTitle: 'Back' // for iOS
+    headerTitle: "Book Details",
+    headerBackTitle: "All Books", // for iOS
+    headerTruncatedBackTitle: "Back", // for iOS
   };
 };
 

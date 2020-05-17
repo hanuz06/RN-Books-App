@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
+  Dimensions,
 } from "react-native";
 
 import { Image, Card } from "react-native-elements";
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxHeight: 420,
     width: "100%",
-    maxWidth: 225,
+    maxWidth: Dimensions.get('screen').width/2-10,
     marginHorizontal: 5,
     marginVertical: 5,
     borderRadius: 10,

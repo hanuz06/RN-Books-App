@@ -8,10 +8,17 @@ import {
   ListRenderItemInfo,
   Platform,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { useSelector, useDispatch } from "react-redux";
 import * as booksActions from "../../store/actions/booksActions";
 import * as authActions from "../../store/actions/authActions";
+import { YellowBox } from 'react-native';
+
+   
+
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/HeaderButton";
@@ -19,18 +26,28 @@ import HeaderButton from "../../components/HeaderButton";
 import { BOOKS, Ibook } from "../../data/book-data";
 import { IBook, IBookState } from "../../types";
 import BookItem from "../../components/BookItem";
-import { Icon, Button } from "react-native-elements";
+import { Icon, Button, SearchBar } from "react-native-elements";
 
 import Colors from "../../constants/Colors";
 
 const BooksListScreen: React.FC = (props: any): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>();
+  const [select, setSelect] = useState<string>("");
+  const [bookList, setBookList] = useState<IBook[]>([]);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const books = useSelector<IBookState, IBook[]>(
+  const searchRef: any = React.createRef();
+
+  let allBooks: IBook[];
+
+  allBooks = useSelector<IBookState, IBook[]>(
     (state: any) => state.books.allBooks
   );
+  
+  useEffect(() => {
+    setBookList(allBooks);
+  }, [allBooks]);
 
   const favBooks = useSelector<IBookState, IBook[]>(
     (state: any) => state.books.favBooks
@@ -38,16 +55,58 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
 
   const dispatch = useDispatch();
 
+  const searchFilterFunction = (text: string): void => {
+    const filtered: IBook[] = allBooks.filter(
+      (book) => book.title.toLowerCase().search(text.toLowerCase()) !== -1
+    );
+    filtered.length !== 0 ? setBookList(filtered) : setBookList(allBooks);
+    setSelect(text);
+  };
+
   const loadBooks = useCallback(async () => {
     setError(null);
     setIsRefreshing(true);
     try {
-      await dispatch(booksActions.fetchBooks());
+      await dispatch(booksActions.fetchBooks());      
+      YellowBox.ignoreWarnings(['Setting a timer']);      
     } catch (err) {
-      setError(err.message);
+      setError(err.message);      
     }
     setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
+
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <SearchBar
+          ref={searchRef}
+          platform={Platform.OS === "android" ? "android" : "ios"}
+          containerStyle={{
+            height: 35,
+            marginHorizontal: 10,
+            width: 180,
+            borderRadius: 25,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          inputContainerStyle={{
+            width: 180,
+            // borderColor: "blue",
+            // borderWidth: 2,
+          }}
+          inputStyle={{
+            // borderColor: "green",
+            // borderWidth: 3,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          value={select}
+          onBlur={() => Keyboard.dismiss()}
+          onChangeText={(text: string) => searchFilterFunction(text)}
+        />
+      ),
+    });
+  }, [select]);
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", loadBooks);
@@ -67,7 +126,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   useEffect(() => {
     if (error) {
       Alert.alert("An Error Occurred!", error, [
-        { text: "Okay", onPress: () => authActions.clearErrorMessage() },
+        { text: "Okay", onPress: () => setError(null) },
       ]);
     }
   }, [error]);
@@ -88,7 +147,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
     );
   }
 
-  if (!isLoading && books.length === 0) {
+  if (!isLoading && bookList.length === 0) {
     return (
       <View style={styles.centered}>
         <Text>No books found. You can add some!</Text>
@@ -100,7 +159,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
     <FlatList
       onRefresh={loadBooks}
       refreshing={isRefreshing}
-      data={books}
+      data={bookList}
       numColumns={2}
       keyExtractor={(item: IBook): string => item.id}
       renderItem={(itemData: ListRenderItemInfo<IBook>) => (
@@ -118,12 +177,12 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
             type="solid"
             loading={false}
             raised={true}
-            // onPress={() => bookSelectHandler(itemData.item.id)}
-            onPress={() => dispatch(booksActions.searchBook())}
+            onPress={() => bookSelectHandler(itemData.item.id)}
+            // onPress={() => dispatch(booksActions.searchBook())}
             buttonStyle={styles.buttonStyle}
           />
-        </BookItem>  
-      )}a
+        </BookItem>
+      )}
     />
   );
 };
@@ -137,6 +196,7 @@ export const screenOptions = (navData: any) => {
           title="Menu"
           iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
           onPress={() => {
+            Keyboard.dismiss();
             navData.navigation.toggleDrawer();
           }}
         />
@@ -157,6 +217,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderRadius: 45,
     width: 90,
-    marginTop: 5
+    marginTop: 5,
   },
 });

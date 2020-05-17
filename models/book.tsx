@@ -1,8 +1,17 @@
-
 class Books {
+  id: string;
+  title: string;
+  ownerId: string;
+  pageCount: number;
+  publishedDate: string;
+  thumbnailUrl: string;
+  description: string;
+  status: string;
+  authors: [string];
+  categories: [string];
   constructor(
     id: string,
-    title: string,    
+    title: string,
     ownerId: string,
     pageCount: number,
     publishedDate: string,

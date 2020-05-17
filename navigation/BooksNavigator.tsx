@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, SafeAreaView, Button, View, Easing } from "react-native";
+import { Platform, SafeAreaView, View, Text, Easing } from "react-native";
 import {
   createStackNavigator,
   TransitionPresets,
@@ -9,8 +9,10 @@ import {
   createDrawerNavigator,
   DrawerItemList,
 } from "@react-navigation/drawer";
+import { Button } from "react-native-elements";
+
 import { Ionicons } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Colors from "../constants/Colors";
 import * as authActions from "../store/actions/authActions";
@@ -24,6 +26,9 @@ import BooksFavoritesScreen, {
 import BooksCategoriesScreen, {
   screenOptions as booksCategoriesScreenOption,
 } from "../screens/books/BooksCategoriesScreen";
+import ByCategoryBooksScreen, {
+  screenOptions as ByCategoryBooksScreenOptions
+} from '../screens/books/ByCategoryBooksScreen'
 import BookDetailsScreen, {
   screenOptions as bookDetailsScreenOptions,
 } from "../screens/books/BookDetailsScreen";
@@ -31,6 +36,7 @@ import AuthScreen, {
   screenOptions as AuthScreenOptions,
 } from "../screens/users/AuthScreen";
 import RegistrationScreen from "../screens/users/RegistrationScreen";
+import { color } from "react-native-reanimated";
 
 // const config: any = {
 //   animation: "spring",
@@ -73,6 +79,20 @@ const defaultNavOptions: any = {
   },
 };
 
+const AuthStackNavigator = createStackNavigator();
+
+export const AuthNavigator = () => {
+  return (
+    <AuthStackNavigator.Navigator screenOptions={defaultNavOptions}>
+      <AuthStackNavigator.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={AuthScreenOptions}
+      />
+    </AuthStackNavigator.Navigator>
+  );
+};
+
 const BooksStackNavigator = createStackNavigator();
 
 export const BooksNavigator = () => {
@@ -93,6 +113,11 @@ export const BooksNavigator = () => {
         component={BookDetailsScreen}
         options={bookDetailsScreenOptions}
       />
+      <BooksStackNavigator.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={AuthScreenOptions}
+      />
     </BooksStackNavigator.Navigator>
   );
 };
@@ -106,6 +131,11 @@ export const CategoriesNavigator = () => {
         name="Categories"
         component={BooksCategoriesScreen}
         options={booksCategoriesScreenOption}
+      />
+      <CategoriesStackNavigator.Screen
+        name="ByCategoryBooks"
+        component={ByCategoryBooksScreen}
+        options={ByCategoryBooksScreenOptions}
       />
     </CategoriesStackNavigator.Navigator>
   );
@@ -130,16 +160,41 @@ const BookDrawerNavigator: any = createDrawerNavigator();
 export const BooksAppNavigator: React.FC = () => {
   const dispatch = useDispatch();
 
+  const userEmail = useSelector<any, string>((state) => state.auth.email);
+
   return (
-    <BookDrawerNavigator.Navigator
+    <BookDrawerNavigator.Navigator 
       drawerContent={(props: any) => {
         return (
           <View style={{ flex: 1, paddingTop: 60 }}>
             <SafeAreaView>
+              <View
+                style={{
+                  height: 45,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{fontSize: 16}}>{userEmail && userEmail}</Text>
+              </View>
               <DrawerItemList {...props} />
               <Button
+                title="Login / Signup"
+                buttonStyle={{
+                  backgroundColor: Colors.primary,
+                  marginVertical: 5,
+                }}
+                disabled={!!userEmail}
+                onPress={() => {
+                  props.navigation.navigate("Auth");
+                }}
+              />
+              <Button
                 title="Logout"
-                color={Colors.primary}
+                buttonStyle={{
+                  backgroundColor: Colors.primary,
+                  marginVertical: 5,
+                }}
                 onPress={() => {
                   dispatch(authActions.logout());
                 }}
@@ -178,7 +233,7 @@ export const BooksAppNavigator: React.FC = () => {
               size={23}
               color={props.color}
             />
-          ),
+          )         
         }}
       />
       <BookDrawerNavigator.Screen
@@ -195,19 +250,5 @@ export const BooksAppNavigator: React.FC = () => {
         }}
       />
     </BookDrawerNavigator.Navigator>
-  );
-};
-
-const AuthStackNavigator = createStackNavigator();
-
-export const AuthNavigator = () => {
-  return (
-    <AuthStackNavigator.Navigator screenOptions={defaultNavOptions}>
-      <AuthStackNavigator.Screen
-        name="Auth"
-        component={AuthScreen}
-        options={AuthScreenOptions}
-      />
-    </AuthStackNavigator.Navigator>
   );
 };

@@ -1,12 +1,6 @@
-import {
-  AUTHENTICATE,
-  LOGOUT,
-  SET_ERROR_MESSAGE,
-  CLEAR_ERROR_MESSAGE,
-  SET_LOADING,
-} from "../../types";
+import { AUTHENTICATE, LOGOUT, SET_LOADING } from "../../types";
 import { AsyncStorage } from "react-native";
-import API_KEY from "../../env.env";
+import { API_KEY } from "../../env.env";
 
 let timer: any;
 
@@ -18,26 +12,10 @@ const setLoading = () => {
   };
 };
 
-export const setErrorMessage = (message: string) => {
-  return (dispatch: any) => {
-    dispatch({
-      type: SET_ERROR_MESSAGE,
-      errorMessage: message,
-    });
-  };
-};
-
-export const clearErrorMessage = () => {
-  return (dispatch: any) => {
-    dispatch({
-      type: CLEAR_ERROR_MESSAGE,
-    });
-  };
-};
-
 export const authenticate = (
   userId: string,
   token: string,
+  email: string,
   expiryTime: number
 ) => {
   return async (dispatch: any) => {
@@ -45,6 +23,7 @@ export const authenticate = (
       type: AUTHENTICATE,
       userId,
       token,
+      email,
     });
     dispatch(setLogoutTimer(expiryTime));
   };
@@ -68,7 +47,7 @@ export const signup = (email: string, password: string) => {
           }),
         }
       );
-
+     
       if (!res.ok) {
         const errorResData = await res.json();
         const errorId = errorResData.error;
@@ -85,21 +64,22 @@ export const signup = (email: string, password: string) => {
         authenticate(
           resData.localId,
           resData.idToken,
-          parseInt(resData.expiresIn) * 1000
+          resData.email,
+          (parseInt(resData.expiresIn) * 1000) / 2
         )
       );
       const expirationDate = new Date(
-        new Date().getTime() + parseInt(resData.expiresIn) * 1000
+        new Date().getTime() + (parseInt(resData.expiresIn) * 1000) / 2
       );
 
       saveDataToStorage(resData.idToken, resData.localId, expirationDate);
     } catch (err) {
-      dispatch(setErrorMessage(err.message));
+      throw err.message;
     }
   };
 };
 
-export const login = (email: string, password: string) => {
+export const login = (email: string, password: string) => {  
   return async (dispatch: any) => {
     dispatch(setLoading());
     try {
@@ -135,16 +115,19 @@ export const login = (email: string, password: string) => {
         authenticate(
           resData.localId,
           resData.idToken,
+          resData.email,
           parseInt(resData.expiresIn) * 1000
         )
       );
+      console.ignoredYellowBox = [
+        'Setting a timer'
+        ];
       const expirationDate = new Date(
-        new Date().getTime() + parseInt(resData.expiresIn) * 1000
-      );
-      saveDataToStorage(resData.idToken, resData.localId, expirationDate);
-    } catch (err) {
-      dispatch(setErrorMessage(err.message));
-      // throw err;
+        new Date().getTime() + (parseInt(resData.expiresIn) * 1000) / 2
+      );      
+      saveDataToStorage(resData.idToken, resData.localId, expirationDate);      
+    } catch (err) {    
+      throw err.message;
     }
   };
 };

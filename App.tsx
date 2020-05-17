@@ -4,7 +4,6 @@ import { Provider } from "react-redux";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import ReduxThunk from "redux-thunk";
-import firebase from "firebase";
 
 import authReducer from "./store/reducers/authReducer";
 import booksReducer from "./store/reducers/booksReducer";
@@ -39,7 +38,7 @@ export default function App(): JSX.Element {
       />
     );
   }
-    
+  
   return (
     <Provider store={store}>
       <AppNavigator />
