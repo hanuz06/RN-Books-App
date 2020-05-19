@@ -1,7 +1,7 @@
 # Books app
 A user can see all books, book details, as well as search books by categories, save and remove favorite books, create account and login. Books and favorite books are stored in Firebase Realtime Database.
 
-!["React Native Books app in action"](https://j.gifs.com/p8WQGX.gif)
+!["React Native Books app in action"](/assets/images/rn-books-app.gif)
 
 ## To watch an app in action on Youtube: 
 <a href="https://youtu.be/fszDfNo1C7s"><img src="./assets/images/rn-books-app-categories.png" width="70" height="150"></a>
