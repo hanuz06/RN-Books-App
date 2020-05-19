@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   View,
   Text,
@@ -12,18 +12,23 @@ import {
 
 import { Image, Card } from "react-native-elements";
 
-// interface Props {
-//   props: {
-//     onSelect: any;
-//     id: string;
-//     image: string;
-//     description: string;
-//     authors: string[];
-//     children: any;
-//   };
-// }
+interface Props {
+  id: string;
+  image: string;
+  description: string;
+  authors: [string];
+  children: any;
+  onSelect: any;
+}
 
-const BookItem: React.FC = (props: any): JSX.Element => {
+const BookItem: React.FC<Props> = ({
+  id,
+  image,
+  description,
+  authors,
+  onSelect,
+  children,
+}): JSX.Element => {
   let TouchableCmp: any = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -33,25 +38,25 @@ const BookItem: React.FC = (props: any): JSX.Element => {
   return (
     <Card containerStyle={styles.cardStyle}>
       <View style={styles.touchable}>
-        <TouchableCmp onPress={() => props.onSelect(props.id)} useForeground>
+        <TouchableCmp onPress={() => onSelect(id)} useForeground>
           <View>
             <View style={styles.imageContainer}>
               <Image
                 style={styles.image}
-                source={{ uri: props.image }}
+                source={{ uri: image }}
                 PlaceholderContent={<ActivityIndicator />}
               />
             </View>
             <View style={styles.details}>
               <Text numberOfLines={3} style={styles.text}>
-                {props.description}
+                {description}
               </Text>
               <Text numberOfLines={2} style={styles.text}>
                 <Text style={styles.author}>Authors: </Text>{" "}
-                {props.authors.join(", ")}
+                {authors.join(", ")}
               </Text>
             </View>
-            <View style={styles.actions}>{props.children}</View>
+            <View style={styles.actions}>{children}</View>
           </View>
         </TouchableCmp>
       </View>
@@ -59,14 +64,14 @@ const BookItem: React.FC = (props: any): JSX.Element => {
   );
 };
 
-export default BookItem;
+export default memo(BookItem);
 
 const styles = StyleSheet.create({
   cardStyle: {
     flex: 1,
     maxHeight: 420,
     width: "100%",
-    maxWidth: Dimensions.get('screen').width/2-10,
+    maxWidth: Dimensions.get("screen").width / 2 - 10,
     marginHorizontal: 5,
     marginVertical: 5,
     borderRadius: 10,

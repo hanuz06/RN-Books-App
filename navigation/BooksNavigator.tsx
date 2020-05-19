@@ -3,12 +3,13 @@ import { Platform, SafeAreaView, View, Text, Easing } from "react-native";
 import {
   createStackNavigator,
   TransitionPresets,
-  CardStyleInterpolators,
 } from "@react-navigation/stack";
 import {
   createDrawerNavigator,
   DrawerItemList,
 } from "@react-navigation/drawer";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import { Button } from "react-native-elements";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -27,16 +28,14 @@ import BooksCategoriesScreen, {
   screenOptions as booksCategoriesScreenOption,
 } from "../screens/books/BooksCategoriesScreen";
 import ByCategoryBooksScreen, {
-  screenOptions as ByCategoryBooksScreenOptions
-} from '../screens/books/ByCategoryBooksScreen'
+  screenOptions as ByCategoryBooksScreenOptions,
+} from "../screens/books/ByCategoryBooksScreen";
 import BookDetailsScreen, {
   screenOptions as bookDetailsScreenOptions,
 } from "../screens/books/BookDetailsScreen";
 import AuthScreen, {
   screenOptions as AuthScreenOptions,
 } from "../screens/users/AuthScreen";
-import RegistrationScreen from "../screens/users/RegistrationScreen";
-import { color } from "react-native-reanimated";
 
 // const config: any = {
 //   animation: "spring",
@@ -81,7 +80,7 @@ const defaultNavOptions: any = {
 
 const AuthStackNavigator = createStackNavigator();
 
-export const AuthNavigator = () => {
+export const AuthNavigator: React.FC = (): JSX.Element => {
   return (
     <AuthStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <AuthStackNavigator.Screen
@@ -95,14 +94,20 @@ export const AuthNavigator = () => {
 
 const BooksStackNavigator = createStackNavigator();
 
-export const BooksNavigator = () => {
+export const BooksNavigator = (): JSX.Element => {
   return (
     <BooksStackNavigator.Navigator
       screenOptions={defaultNavOptions}
+      initialRouteName="BooksList"
       // mode="modal"
-      headerMode="float"
+      headerMode={Platform.OS === "android" ? "screen" : "float"}
       // animation="fade"
     >
+      <BooksStackNavigator.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={AuthScreenOptions}
+      />
       <BooksStackNavigator.Screen
         name="BooksList"
         component={BooksListScreen}
@@ -113,18 +118,13 @@ export const BooksNavigator = () => {
         component={BookDetailsScreen}
         options={bookDetailsScreenOptions}
       />
-      <BooksStackNavigator.Screen
-        name="Auth"
-        component={AuthScreen}
-        options={AuthScreenOptions}
-      />
     </BooksStackNavigator.Navigator>
   );
 };
 
 const CategoriesStackNavigator = createStackNavigator();
 
-export const CategoriesNavigator = () => {
+export const CategoriesNavigator: React.FC = (): JSX.Element => {
   return (
     <CategoriesStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <CategoriesStackNavigator.Screen
@@ -137,13 +137,18 @@ export const CategoriesNavigator = () => {
         component={ByCategoryBooksScreen}
         options={ByCategoryBooksScreenOptions}
       />
+      {/* <BooksStackNavigator.Screen
+        name="BookDetails"
+        component={BookDetailsScreen}
+        options={bookDetailsScreenOptions}
+      /> */}
     </CategoriesStackNavigator.Navigator>
   );
 };
 
 const FavoritesStackNavigator = createStackNavigator();
 
-export const FavoritesNavigator = () => {
+export const FavoritesNavigator: React.FC = (): JSX.Element => {
   return (
     <FavoritesStackNavigator.Navigator screenOptions={defaultNavOptions}>
       <FavoritesStackNavigator.Screen
@@ -151,19 +156,85 @@ export const FavoritesNavigator = () => {
         component={BooksFavoritesScreen}
         options={booksFavoritesScreenOption}
       />
+      {/* <BooksStackNavigator.Screen
+        name="BookDetails"
+        component={BookDetailsScreen}
+        options={bookDetailsScreenOptions}
+      /> */}
     </FavoritesStackNavigator.Navigator>
   );
 };
 
+// bottom tabs
+const BottomTab = createBottomTabNavigator();
+
+export const BottomTabNavigator: React.FC = (): JSX.Element => {
+  return (
+    <BottomTab.Navigator
+      initialRouteName="HOME"
+      tabBarOptions={{
+        activeTintColor: "white",
+        activeBackgroundColor: "#b53300",
+        inactiveTintColor: "white",
+        inactiveBackgroundColor: Colors.primary,
+      }}
+    >
+      <BottomTab.Screen
+        name="HOME"
+        component={BooksNavigator}
+        options={{
+          tabBarLabel: "HOME",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-home" : "ios-home"}
+              size={23}
+              color="white"
+            />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="CATEGORIES"
+        component={CategoriesNavigator}
+        options={{
+          tabBarLabel: "CATEGORIES",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-list" : "ios-list"}
+              size={23}
+              color="white"
+            />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="FAVORITES"
+        component={FavoritesNavigator}
+        options={{
+          tabBarLabel: "FAVORITES",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons
+              name={Platform.OS === "android" ? "md-star" : "ios-star"}
+              size={23}
+              color="white"
+            />
+          ),
+        }}
+      />
+    </BottomTab.Navigator>
+  );
+};
+
+// drawer
 const BookDrawerNavigator: any = createDrawerNavigator();
 
-export const BooksAppNavigator: React.FC = () => {
+export const BooksAppNavigator: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const userEmail = useSelector<any, string>((state) => state.auth.email);
 
   return (
-    <BookDrawerNavigator.Navigator 
+    <BookDrawerNavigator.Navigator
       drawerContent={(props: any) => {
         return (
           <View style={{ flex: 1, paddingTop: 60 }}>
@@ -175,7 +246,7 @@ export const BooksAppNavigator: React.FC = () => {
                   alignItems: "center",
                 }}
               >
-                <Text style={{fontSize: 16}}>{userEmail && userEmail}</Text>
+                <Text style={{ fontSize: 16 }}>{userEmail && userEmail}</Text>
               </View>
               <DrawerItemList {...props} />
               <Button
@@ -197,6 +268,7 @@ export const BooksAppNavigator: React.FC = () => {
                 }}
                 onPress={() => {
                   dispatch(authActions.logout());
+                  props.navigation.navigate("BooksList");
                 }}
               />
             </SafeAreaView>
@@ -212,13 +284,13 @@ export const BooksAppNavigator: React.FC = () => {
     >
       <BookDrawerNavigator.Screen
         name="Book List"
-        component={BooksNavigator}
+        component={BottomTabNavigator}
         options={{
           drawerIcon: (props: any) => (
             <Ionicons
               name={Platform.OS === "android" ? "md-list" : "ios-list"}
               size={23}
-              color={props.color}
+              // color={props.color}
             />
           ),
         }}
@@ -231,9 +303,9 @@ export const BooksAppNavigator: React.FC = () => {
             <Ionicons
               name={Platform.OS === "android" ? "md-book" : "ios-book"}
               size={23}
-              color={props.color}
+              // color={props.color}
             />
-          )         
+          ),
         }}
       />
       <BookDrawerNavigator.Screen

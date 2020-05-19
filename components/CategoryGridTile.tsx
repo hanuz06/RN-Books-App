@@ -8,21 +8,27 @@ import {
   TouchableNativeFeedback,
 } from "react-native";
 
-const CategoryGridTile = (props: any): JSX.Element => {
+interface Props {
+  categoryName: string;
+  color: string;
+  onSelect: any;
+}
+
+const CategoryGridTile: React.FC<Props> = ({
+  categoryName,
+  color,
+  onSelect,
+}): JSX.Element => {
   let TouchableCmp: any = TouchableOpacity;
-  // console.log('category nameeeee ',  props.categoryName)
   if (Platform.OS === "android" && Platform.Version >= 21) {
     TouchableCmp = TouchableNativeFeedback;
   }
-  const catName = props.categoryName;
   return (
     <View style={styles.gridItem}>
-      <TouchableCmp style={{ flex: 1 }} onPress={() => props.onSelect(catName)}>
-        <View
-          style={{ ...styles.container, ...{ backgroundColor: props.color } }}
-        >
+      <TouchableCmp style={{ flex: 1 }} onPress={() => onSelect(categoryName)}>
+        <View style={{ ...styles.container, ...{ backgroundColor: color } }}>
           <Text style={styles.title} numberOfLines={2}>
-            {props.categoryName}
+            {categoryName}
           </Text>
         </View>
       </TouchableCmp>

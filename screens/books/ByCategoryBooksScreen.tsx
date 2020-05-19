@@ -1,59 +1,56 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  Platform,
-  View,
-  FlatList,
-  ListRenderItem,
-  ListRenderItemInfo,
-} from "react-native";
+import React from "react";
+import { StyleSheet, FlatList, ListRenderItemInfo } from "react-native";
 
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import HeaderButton from "../../components/HeaderButton";
+import { useSelector } from "react-redux";
 
-import Colors from "../../constants/Colors";
-import { useSelector, useDispatch } from "react-redux";
-import * as bookActions from "../../store/actions/booksActions";
 import { IBookState, IBook } from "../../types";
-import FavBookItems from "../../components/FavBookItems";
+import FavCategoryBookItem from "../../components/FavCategoryBookItem";
 
-type Props = {
-  props: {
-    onSelect: () => {};
-    id: string;
-    title: string;
-    image: string;
-    description: string;
-    authors: string[];
-    categories: string[];
-    route: {
-      params: string;
+interface Props {
+  route: {
+    params: {
+      params: {
+        categoryName: string;
+      };
     };
   };
-};
+  navigation: any;
+}
 
-const ByCategoriesBooksScreen: React.FC<any> = (props: any): JSX.Element => {
+const ByCategoriesBooksScreen: React.FC<Props> = (props): JSX.Element => {
   const categoryName: string = props.route.params.params.categoryName;
   const AllBooksByCategories: any = useSelector<IBookState, {}>(
     (state: any) => state.books.booksByCategories
   );
- 
-  const booksByCategory:any[] = [...AllBooksByCategories[categoryName]];
+
+  const favBooks = useSelector<IBookState, IBook[]>(
+    (state: any) => state.books.favBooks
+  );
+
+  const booksByCategory: any[] = [...AllBooksByCategories[categoryName]];
+
+  const bookSelectHandler = (id: string): void => {
+    const isFavorite = favBooks.some((book) => book.id === id);
+    props.navigation.navigate("BookDetails", {
+      id: id,
+      isFav: isFavorite,
+    });
+  };
 
   return (
-    <FlatList      
+    <FlatList
       data={booksByCategory}
       keyExtractor={(item: IBook): string => item.id}
       renderItem={(itemData: ListRenderItemInfo<IBook>): JSX.Element => (
-        <FavBookItems
+        <FavCategoryBookItem
           id={itemData.item.id}
           title={itemData.item.title}
           image={itemData.item.thumbnailUrl}
           description={itemData.item.description}
+          publishedDate={itemData.item.publishedDate}
           authors={itemData.item.authors}
           categories={itemData.item.categories}
-          onSelect={() => {}}
+          onSelect={bookSelectHandler}
         />
       )}
     />

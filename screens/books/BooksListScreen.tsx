@@ -9,24 +9,18 @@ import {
   Platform,
   Alert,
   Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+
 import { useSelector, useDispatch } from "react-redux";
 import * as booksActions from "../../store/actions/booksActions";
-import * as authActions from "../../store/actions/authActions";
-import { YellowBox } from 'react-native';
-
-   
-
+import { YellowBox } from "react-native";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/HeaderButton";
 
-import { BOOKS, Ibook } from "../../data/book-data";
 import { IBook, IBookState } from "../../types";
 import BookItem from "../../components/BookItem";
-import { Icon, Button, SearchBar } from "react-native-elements";
+import { Button, SearchBar } from "react-native-elements";
 
 import Colors from "../../constants/Colors";
 
@@ -37,21 +31,15 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   const [bookList, setBookList] = useState<IBook[]>([]);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const searchRef: any = React.createRef();
-
   let allBooks: IBook[];
 
   allBooks = useSelector<IBookState, IBook[]>(
     (state: any) => state.books.allBooks
   );
-  
+
   useEffect(() => {
     setBookList(allBooks);
   }, [allBooks]);
-
-  const favBooks = useSelector<IBookState, IBook[]>(
-    (state: any) => state.books.favBooks
-  );
 
   const dispatch = useDispatch();
 
@@ -67,10 +55,10 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
     setError(null);
     setIsRefreshing(true);
     try {
-      await dispatch(booksActions.fetchBooks());      
-      YellowBox.ignoreWarnings(['Setting a timer']);      
+      await dispatch(booksActions.fetchBooks());
+      YellowBox.ignoreWarnings(["Setting a timer"]);
     } catch (err) {
-      setError(err.message);      
+      setError(err.message);
     }
     setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
@@ -79,7 +67,6 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
     props.navigation.setOptions({
       headerRight: () => (
         <SearchBar
-          ref={searchRef}
           platform={Platform.OS === "android" ? "android" : "ios"}
           containerStyle={{
             height: 35,
@@ -90,13 +77,9 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
             justifyContent: "center",
           }}
           inputContainerStyle={{
-            width: 180,
-            // borderColor: "blue",
-            // borderWidth: 2,
+            width: 180,            
           }}
           inputStyle={{
-            // borderColor: "green",
-            // borderWidth: 3,
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -132,11 +115,10 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   }, [error]);
 
   const bookSelectHandler = (id: string): void => {
-    const isFavorite = favBooks.some((book) => book.id === id);
     props.navigation.navigate("BookDetails", {
       id: id,
-      isFav: isFavorite,
     });
+    setSelect("");
   };
 
   if (isLoading) {
@@ -150,7 +132,7 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
   if (!isLoading && bookList.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>No books found. You can add some!</Text>
+        <Text>No books found!</Text>
       </View>
     );
   }
@@ -165,20 +147,16 @@ const BooksListScreen: React.FC = (props: any): JSX.Element => {
       renderItem={(itemData: ListRenderItemInfo<IBook>) => (
         <BookItem
           id={itemData.item.id}
-          title={itemData.item.title}
           image={itemData.item.thumbnailUrl}
           description={itemData.item.description}
           authors={itemData.item.authors}
           onSelect={bookSelectHandler}
         >
-          <Button
-            // icon={<Icon name="details" size={15} color="#fff" />}
+          <Button            
             title="Details"
             type="solid"
             loading={false}
-            raised={true}
             onPress={() => bookSelectHandler(itemData.item.id)}
-            // onPress={() => dispatch(booksActions.searchBook())}
             buttonStyle={styles.buttonStyle}
           />
         </BookItem>
@@ -217,6 +195,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderRadius: 45,
     width: 90,
+    opacity: 0.8,
     marginTop: 5,
+    shadowColor: "black",
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 5,
   },
 });

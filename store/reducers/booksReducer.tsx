@@ -1,17 +1,18 @@
 import {
-  SET_BOOKS,
-  CREATE_BOOK,
+  SET_BOOKS,  
   IBookState,
-  BookActionsType,
-  TOGGLE_FAV_BOOK,
-  IBook,
+  BookActionsType,  
+  ADD_FAV_BOOK,  
+  LOGOUT,
+  SET_FAV_BOOKS,
+  REMOVE_FAV_BOOK,
 } from "../../types";
 
 const initialState: IBookState = {
   allBooks: [],
   favBooks: [],
   booksByCategories: {},
-  bookCategories: []
+  bookCategories: [],
 };
 
 export default (state = initialState, action: BookActionsType) => {
@@ -21,22 +22,24 @@ export default (state = initialState, action: BookActionsType) => {
         ...state,
         allBooks: action.loadedBooks,
         booksByCategories: action.booksByCategories,
-        booksCategories: action.bookCategories
+        booksCategories: action.bookCategories,
+      };    
+    case SET_FAV_BOOKS:
+      return {
+        ...state,
+        favBooks: action.favBooks,
       };
-    case TOGGLE_FAV_BOOK:
-      const existingIndex: number = state.favBooks.findIndex(
-        (book) => book.id === action.id
-      );
-
-      if (existingIndex >= 0) {
-        const updatedFavMeals = [...state.favBooks];
-        updatedFavMeals.splice(existingIndex, 1);
-        return { ...state, favBooks: updatedFavMeals };
-      } else {
-        const book: any = state.allBooks.find((book) => book.id === action.id);
-
-        return { ...state, favBooks: state.favBooks.concat(book) };
-      }
+    case ADD_FAV_BOOK:
+      return { ...state, favBooks: state.favBooks.concat(action.addedBook) };
+    case REMOVE_FAV_BOOK:
+      const updatedFavMeals = [...state.favBooks];
+      updatedFavMeals.splice(action.existingIndex, 1);
+      return { ...state, favBooks: updatedFavMeals };
+    case LOGOUT:
+      return {
+        ...state,
+        favBooks: [],
+      };
     default:
       return state;
   }

@@ -1,13 +1,15 @@
 export const SET_BOOKS = "SET_BOOKS";
+export const SET_FAV_BOOKS = "SET_FAV_BOOKS";
 export const UPDATE_BOOK = "UPDATE_BOOK";
 export const CREATE_BOOK = "CREATE_BOOK";
 export const AUTHENTICATE = "AUTHENTICATE";
 export const LOGOUT = "LOGOUT";
-export const TOGGLE_FAV_BOOK = "TOGGLE_FAV_BOOK";
-export const SET_LOADING = "SET_LOADING";
+export const ADD_FAV_BOOK = "ADD_FAV_BOOK";
+export const REMOVE_FAV_BOOK = "REMOVE_FAV_BOOK";
 
 export interface IBook {
   id: string;
+  fbId?: string;
   title: string;
   ownerId?: string;
   pageCount: number;
@@ -30,12 +32,31 @@ interface ISetBooks {
   bookCategories: [];
 }
 
-interface IToggleBookFav {
-  type: typeof TOGGLE_FAV_BOOK;
-  id: string;
+interface IAddFavBook {
+  type: typeof ADD_FAV_BOOK;
+  addedBook: any;
 }
 
-export type BookActionsType = ISetBooks | IToggleBookFav;
+interface IRemoveFavBook {
+  type: typeof REMOVE_FAV_BOOK;
+  existingIndex: number;
+}
+
+interface ISetFavBooks {
+  type: typeof SET_FAV_BOOKS;
+  favBooks: [];
+}
+
+interface ILogout {
+  type: typeof LOGOUT;
+}
+
+export type BookActionsType =
+  | ISetBooks
+  | IAddFavBook
+  | ILogout
+  | ISetFavBooks  
+  | IRemoveFavBook;
 
 export interface IBookState {
   allBooks: IBook[];
@@ -57,15 +78,7 @@ interface IAuthenticate {
   email: string;
 }
 
-interface ILogout {
-  type: typeof LOGOUT;
-}
-
-interface ISetLoading {
-  type: typeof SET_LOADING;
-}
-
-export type AuthActionsType = IAuthenticate | ILogout | ISetLoading;
+export type AuthActionsType = IAuthenticate | ILogout ;
 
 export interface IFormInput {
   email: string;

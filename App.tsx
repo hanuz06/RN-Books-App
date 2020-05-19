@@ -7,7 +7,8 @@ import ReduxThunk from "redux-thunk";
 
 import authReducer from "./store/reducers/authReducer";
 import booksReducer from "./store/reducers/booksReducer";
-import AppNavigator from "./navigation/AppNavigator";
+import { NavigationContainer } from "@react-navigation/native";
+import { BooksAppNavigator } from "./navigation/BooksNavigator";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -38,10 +39,12 @@ export default function App(): JSX.Element {
       />
     );
   }
-  
+
   return (
     <Provider store={store}>
-      <AppNavigator />
+      <NavigationContainer>
+        <BooksAppNavigator />
+      </NavigationContainer>
     </Provider>
   );
 }

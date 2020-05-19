@@ -4,14 +4,6 @@ import { API_KEY } from "../../env.env";
 
 let timer: any;
 
-const setLoading = () => {
-  return (dispatch: any) => {
-    dispatch({
-      type: SET_LOADING,
-    });
-  };
-};
-
 export const authenticate = (
   userId: string,
   token: string,
@@ -31,7 +23,6 @@ export const authenticate = (
 
 export const signup = (email: string, password: string) => {
   return async (dispatch: any) => {
-    dispatch(setLoading());
     try {
       const res: any = await fetch(
         `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
@@ -47,7 +38,7 @@ export const signup = (email: string, password: string) => {
           }),
         }
       );
-     
+
       if (!res.ok) {
         const errorResData = await res.json();
         const errorId = errorResData.error;
@@ -79,9 +70,8 @@ export const signup = (email: string, password: string) => {
   };
 };
 
-export const login = (email: string, password: string) => {  
+export const login = (email: string, password: string) => {
   return async (dispatch: any) => {
-    dispatch(setLoading());
     try {
       const res: any = await fetch(
         `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,
@@ -119,14 +109,12 @@ export const login = (email: string, password: string) => {
           parseInt(resData.expiresIn) * 1000
         )
       );
-      console.ignoredYellowBox = [
-        'Setting a timer'
-        ];
+      console.ignoredYellowBox = ["Setting a timer"];
       const expirationDate = new Date(
         new Date().getTime() + (parseInt(resData.expiresIn) * 1000) / 2
-      );      
-      saveDataToStorage(resData.idToken, resData.localId, expirationDate);      
-    } catch (err) {    
+      );
+      saveDataToStorage(resData.idToken, resData.localId, expirationDate);
+    } catch (err) {
       throw err.message;
     }
   };

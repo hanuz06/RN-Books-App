@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useReducer, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  ScrollView,
-  View,
+  ScrollView,  
   KeyboardAvoidingView,
-  StyleSheet,
-  ActivityIndicator,
+  StyleSheet,  
   Alert,
   Text,
   Dimensions,
@@ -18,11 +16,11 @@ import * as yup from "yup";
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Colors from "../../constants/Colors";
 import * as authActions from "../../store/actions/authActions";
-import { IFormInput, IAuthState } from "../../types";
+import { IFormInput } from "../../types";
 
 const AuthScreen = (props: any): JSX.Element => {
   const [error, setError] = useState<string>("");
