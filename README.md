@@ -3,9 +3,6 @@ A user can see all books, book details, as well as search books by categories, s
 
 !["React Native Books app in action"](/assets/images/rn-books-app.gif)
 
-## To watch an app in action on Youtube: 
-<a href="https://youtu.be/fszDfNo1C7s"><img src="./assets/images/rn-books-app-categories.png" width="70" height="150"></a>
-
 ## Downloading the project
 
 Fork and clone this repo. It is recommended to install Android Studio Emulator as instructed 👉 in [expo-android-studio-emulator](https://docs.expo.io/workflow/android-studio-emulator/) or iOS Simulator as instructed 👉 in [expo-iOS-emulator](https://docs.expo.io/workflow/ios-simulator/). The following instruction is for Android Studio. 
