@@ -62,7 +62,7 @@ export interface IBookState {
   allBooks: IBook[];
   favBooks: IBook[];
   booksByCategories: {};
-  bookCategories: [];
+  bookCategories: [string];
 }
 
 export interface IAuthState {
